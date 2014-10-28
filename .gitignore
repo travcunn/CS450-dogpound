@@ -1,0 +1,13 @@
+#*.db
+venv
+build
+dist
+__pycache__
+
+# python specific
+*.pyc
+
+# vim swp files
+*.swp
+*.swo
+*~
