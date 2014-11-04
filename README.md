@@ -14,8 +14,6 @@ You will need the following to setup dogpound:
 Installation
 ============
 ```
-git clone https://github.iu.edu/CS450-ECE461/fall2014-group8.git
-cd fall2014-group8.git
 virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
@@ -32,6 +30,18 @@ Then activate it:
 source venv/bin/activate
 ```
 
+Vagrant Development
+===================
+To boot the development VM:
+```
+cd vagrant
+make up
+```
+Shutdown the development VM:
+```
+cd vagrant
+make halt
+```
 
 Running tests
 =============
