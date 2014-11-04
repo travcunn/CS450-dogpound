@@ -1,0 +1,43 @@
+<link rel='stylesheet' type='text/css' href='/static/style.css'/>
+
+<html>
+  <head>
+<!-- pulls title from view.py or displays default -->
+	  {% if title %}
+		<title>{{ title }} - dogpound</title>
+	  {% else %}	
+	  	<title>Welcome to dogpound</title>
+	  {% endif %}
+  </head>
+  <body>
+    <div>
+    	<h2>
+	    	<img src="/static/paw.png" alt="dogpound" height='20em' width='20em'>
+    		dogpound 
+		</h2>
+		<h3>
+			<a href="/index">Dogfeed</a>
+			--- 
+<!-- If user is logged in then we don't want to show the login button -->
+		{% if loggedIn %}
+			<a href="/login">Log Out</a> 
+		{% else %}
+			<a href="/login">Login</a> 
+		{% endif %}
+		</h3>
+    </div>
+    <hr>
+<!--  message to flash on login page when a user logs out -->
+<!--     We could use some js to remove the message after so many seconds -->
+    {% with messages = get_flashed_messages() %}
+    	{% if messages %}
+    		<ul>
+    		{% for message in messages %}
+    			<li>{{ message }} </li>
+    		{% endfor %}
+    		</ul>
+    	{% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </body>
+</html>

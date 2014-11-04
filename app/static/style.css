@@ -1,0 +1,11 @@
+* {
+text-align: center;
+background-color: gray;
+color: #002b5b;
+}
+
+#bark {
+	margin-left:33%;
+	border: 1px solid maroon;
+	width: 33%;
+}

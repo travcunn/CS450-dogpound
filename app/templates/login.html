@@ -1,0 +1,34 @@
+<!-- import base html header -->
+{% extends "base.html" %}
+
+<!-- login page block -->
+{% block content %}
+  <h1>Sign In</h1>
+  
+<!--   Flask-WTF form for login -->
+  <form action="" method="post" name="login">
+	<!-- hidden field implements csrf protection on the page -->
+      {{ form.hidden_tag() }}
+      <p>
+		<!-- field to enter email address -->
+          email:<br>
+          {{ form.email(size=35) }}<br>
+			<!-- show validation errors on form in red -->
+          {% for error in form.email.errors %}
+          	<span style="color: red;">[{{ error }}]</span>
+          {% endfor %}<br>
+          
+          <!-- field to enter password -->
+          password:<br>
+          {{ form.password(size=35) }}<br>
+          <!-- show validation errors on form in red -->
+          {% for error in form.password.errors %}
+          	<span style="color: red;">[{{ error }}]</span>
+          {% endfor %}<br>
+          
+      </p>
+		<!-- checkbox for future feature to add "remember me" option -->
+<!--       <p>{{ form.remember_me }} Remember Me</p> -->
+      <p><input type="submit" value="Sign In"></p>
+  </form>
+{% endblock %}
