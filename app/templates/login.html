@@ -11,7 +11,7 @@
       {{ form.hidden_tag() }}
       <p>
 		<!-- field to enter email address -->
-          email:<br>
+          E-mail:<br>
           {{ form.email(size=35) }}<br>
 			<!-- show validation errors on form in red -->
           {% for error in form.email.errors %}
@@ -19,7 +19,7 @@
           {% endfor %}<br>
           
           <!-- field to enter password -->
-          password:<br>
+          Password:<br>
           {{ form.password(size=35) }}<br>
           <!-- show validation errors on form in red -->
           {% for error in form.password.errors %}

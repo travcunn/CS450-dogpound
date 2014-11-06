@@ -4,8 +4,7 @@ from wtforms.validators import DataRequired
 
 # class for the login form and fields
 class LoginForm(Form):
-
-# email and password are required fields
+	# email and password are required fields
     email = StringField('email', validators=[DataRequired()])
     password = StringField('password', validators=[DataRequired()])
     remember_me = BooleanField('remember_me', default=False)
@@ -13,3 +12,11 @@ class LoginForm(Form):
 # class for the new barks form
 class BarkForm(Form):
 	barkBody = StringField('bark', validators=[DataRequired()])
+	
+# class for the login form and fields
+class RegistrationForm(Form):
+	# all are required fields
+    firstName = StringField('firstName', validators=[DataRequired()])
+    lastName = StringField('firstName', validators=[DataRequired()])
+    email = StringField('email', validators=[DataRequired()])
+    password = StringField('password', validators=[DataRequired()])

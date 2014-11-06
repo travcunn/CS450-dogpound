@@ -1,0 +1,62 @@
+<!-- import base html header -->
+{% extends "base.html" %}
+
+<!-- admin page block -->
+{% block content %}
+  <body>
+	
+      <h2>Admin Page</h2>
+      
+      <!--   Flask-WTF form for login -->
+  <form action="" method="post" name="register">
+	<!-- hidden field implements csrf protection on the page -->
+      {{ form.hidden_tag() }}
+      <p>
+      	<!-- field to enter first name -->
+          First Name:<br>
+          {{ form.firstName(size=35) }}<br>
+			<!-- show validation errors on form in red -->
+          {% for error in form.firstName.errors %}
+          	<span style="color: red;">[{{ error }}]</span>
+          {% endfor %}<br>
+          
+          <!-- field to enter last name -->
+          Last Name:<br>
+          {{ form.lastName(size=35) }}<br>
+			<!-- show validation errors on form in red -->
+          {% for error in form.lastName.errors %}
+          	<span style="color: red;">[{{ error }}]</span>
+          {% endfor %}<br>
+      
+		<!-- field to enter email address -->
+          E-mail:<br>
+          {{ form.email(size=35) }}<br>
+			<!-- show validation errors on form in red -->
+          {% for error in form.email.errors %}
+          	<span style="color: red;">[{{ error }}]</span>
+          {% endfor %}<br>
+          
+          <!-- field to enter password -->
+          Password:<br>
+          {{ form.password(size=35) }}<br>
+          <!-- show validation errors on form in red -->
+          {% for error in form.password.errors %}
+          	<span style="color: red;">[{{ error }}]</span>
+          {% endfor %}<br>
+          
+      </p>
+		<!-- checkbox for future feature to add "remember me" option -->
+<!--       <p>{{ form.remember_me }} Remember Me</p> -->
+      <p><input type="submit" value="Register User"></p>
+  </form>
+  
+  <br><br>
+  	<h3>Registered Users</h3>
+  	{% for user in allUsers %}
+<!-- display user's first & last name and email address and hashed password to prove they are being hashed -->
+      <div><p id='bark'>{{ user.id }} : {{ user.firstName }} {{ user.lastName }} - {{ user.email }}
+      <br>{{ user.password }}</p></div>
+	{% endfor %}
+  
+  </body>
+{% endblock %}

@@ -19,10 +19,12 @@
 			<a href="/index">Dogfeed</a>
 			--- 
 <!-- If user is logged in then we don't want to show the login button -->
-		{% if loggedIn %}
-			<a href="/login">Log Out</a> 
-		{% else %}
+		{% if activeUser == '' %}
 			<a href="/login">Login</a> 
+		{% elif activeUser == null  %}
+			<a href="/login">Login</a> 
+		{% else %}
+			<a href="/logout">Log Out</a> 
 		{% endif %}
 		</h3>
     </div>
