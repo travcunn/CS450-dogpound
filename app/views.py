@@ -5,7 +5,10 @@ from .models import User, Bark
 from datetime import datetime
 from flask.ext.bcrypt import Bcrypt
 
-activeUser =''
+global activeUser
+activeUser = ''
+global barks
+barks =''
 bcrypt = Bcrypt(app)
 
 # home page route
@@ -25,13 +28,15 @@ def index():
 		form.barkBody.data='' #clear form field for bark
 
 	# display all the barks in the database - <<< will need to filter to own posts and friends posts only >>>
-	barks = models.Bark.query.all()
+	# order newest to oldest
+# 	barks = models.Bark.query.order_by('timestamp desc').all()
 
 	return render_template('index.html', 
 							title='Home',
 							user=user,
 							barks=barks,
-							form=form, activeUser=activeUser)
+							form=form, 
+							activeUser=activeUser)
 							
 
 # login page							
@@ -46,7 +51,7 @@ def login():
 	
 		allUsers = models.User.query.all() # get all registered users
 		
-		currentUser=1 # variable to 
+		currentUser=1 # variable to track iteration
 		for user in allUsers:
 			if userEmail == user.email: # look at email field for each user
 				# if userPassword == user.password: #verify password matches - plain text
@@ -58,6 +63,8 @@ def login():
 					
 					global activeUser # set active User
 					activeUser= user
+					global barks # global is not the right way to do this.
+					barks = user.friends_barks()
 					return redirect('/index')
 				else:
 					# flash message - for debugging only
@@ -80,10 +87,11 @@ def login():
 # redirect page for invalid logins    
 @app.route("/logout")
 def logout():
-	global activeUser
-	flash('%s %s has successfully logged out.' %
-					(activeUser.firstName, activeUser.lastName))
-	activeUser = ''
+	# global activeUser
+# 	flash('%s %s has successfully logged out.' %
+# 					(activeUser.firstName, activeUser.lastName))
+# 	activeUser = ''
+	flash('You have successfully logged out.')
 	form = LoginForm()
 	return render_template('login.html', 
 							title='Sign In', 
