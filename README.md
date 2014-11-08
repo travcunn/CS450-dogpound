@@ -41,3 +41,11 @@ Running the web app
 ```
 make run
 ```
+
+Test Users
+==========
+- vader@deathstar.com - noarms
+- luke@rebelbase.com - TwinSister
+- marty@delorean.com - Jennifer
+- doc@delorean.com - Clara
+- lloyd@aspen.com - PillsAreGood
