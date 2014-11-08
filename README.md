@@ -30,19 +30,6 @@ Then activate it:
 source venv/bin/activate
 ```
 
-Vagrant Development
-===================
-To boot the development VM:
-```
-cd vagrant
-make up
-```
-Shutdown the development VM:
-```
-cd vagrant
-make halt
-```
-
 Running tests
 =============
 ```
