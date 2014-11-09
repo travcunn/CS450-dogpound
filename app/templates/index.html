@@ -4,29 +4,24 @@
 <!-- feed/home page block -->
 {% block content %}
   <body>
-  	{% if activeUser == '' %}
-  		<h2><a href='/login'>Please log in.</a></h2>
-  	{% else %}
-  
-		<!-- Display user's first and last name in greeting line -->
-		  <h2>Welcome, {{ user.firstName }} {{ user.lastName }}</h2>
-		  <form action="" method="post" name="bark">
-			  <!-- hidden field implements csrf protection on the page -->
-			  {{ form.hidden_tag() }}
-			  <p>
-				<!-- Title for barking form field-->
-				  Post new bark:<br>
-				  {{ form.barkBody(size=80) }}<br>
-			  </p>
-			  <p><input type="submit" value="Bark"></p>
-		  </form>
-	  
-		  <h3>Dogfeed:</h3>
-		<!-- Loop through and display all barks in database -->
-		  {% for bark in barks %}
-	<!-- display user's first & last name and email address with each bark posted -->
-		  <div><p id='bark'><b>{{ bark.author.firstName }} {{ bark.author.lastName }} - {{ bark.author.email }}
-		   :</b> <br>{{ bark.barkBody }}</p></div>
-		  {% endfor %}
-	{% endif %}
+    <!-- Display user's first and last name in greeting line -->
+        <h2>Welcome, {{ user.firstName }} {{ user.lastName }}</h2>
+        <form action="" method="post" name="bark">
+            <!-- hidden field implements csrf protection on the page -->
+            {{ form.hidden_tag() }}
+            <p>
+            <!-- Title for barking form field-->
+                Post new bark:<br>
+                {{ form.barkBody(size=80) }}<br>
+            </p>
+            <p><input type="submit" value="Bark"></p>
+        </form>
+    
+        <h3>Dogfeed:</h3>
+        <!-- Loop through and display all barks in database -->
+        {% for bark in barks %}
+        <!-- display user's first & last name and email address with each bark posted -->
+        <div><p id='bark'><b>{{ bark.author.firstName }} {{ bark.author.lastName }} - {{ bark.author.email }}
+        :</b> <br>{{ bark.barkBody }}</p></div>
+        {% endfor %}
 {% endblock %}

@@ -12,9 +12,9 @@ class User(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), index=True, unique=True)
-    firstName = db.Column(db.String(80), index=True)
-    lastName = db.Column(db.String(80), index = True)
-    password = db.Column(db.String(20), index=True)
+    firstName = db.Column(db.String(80))
+    lastName = db.Column(db.String(80))
+    password = db.Column(db.String(20))
     #  adds relationship between User and Barks so a user's barks can be displayed
     barks = db.relationship('Bark', backref='author', lazy='dynamic')
     friendList = db.relationship('User', secondary=friends,
@@ -27,8 +27,20 @@ class User(db.Model):
     	return Bark.query.join(friends, 
     		(friends.c.friendee_id == Bark.user_id)).filter(friends.c.friender_id == self.id).order_by(Bark.timestamp.desc())
     
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return unicode(self.id)
+
     def __repr__(self):
-        return '<User %r>' % (self.firstName)
+        return '<User %r>' % (self.email)
       
         
 class Bark(db.Model):

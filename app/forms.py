@@ -1,6 +1,9 @@
 from flask.ext.wtf import Form
-from wtforms import StringField, BooleanField
+from wtforms import BooleanField, StringField
 from wtforms.validators import DataRequired
+
+from app import db
+from app.models import User
 
 
 class LoginForm(Form):
@@ -11,6 +14,30 @@ class LoginForm(Form):
     email = StringField('email', validators=[DataRequired()])
     password = StringField('password', validators=[DataRequired()])
     remember_me = BooleanField('remember_me', default=False)
+
+
+class LoginChecker(object):
+    """
+    Form that checks if a login is valid.
+    """
+    def __init__(self, email, password):
+        self._email = email
+        self._password = password
+
+    @property
+    def is_valid(self):
+        user = self.lookup_user
+        if user is None:
+            return False
+
+        if user.password != self._password:
+            return False
+
+        return True
+
+    @property
+    def lookup_user(self):
+        return db.session.query(User).filter_by(email=self._email).first()
 
 
 class BarkForm(Form):

@@ -1,10 +1,13 @@
 from flask import Flask
+from flask.ext.login import LoginManager
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.bcrypt import Bcrypt
 
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
 
-from app import views, models
+login_manager = LoginManager(app)
+login_manager.session_protection = "strong"
+
+
+from app import models, views

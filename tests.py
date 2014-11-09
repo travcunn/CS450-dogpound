@@ -34,6 +34,10 @@ class BaseLoginTestCase(BaseTestCase):
         """ Logout from the app. """
         return self.app.get('/logout', follow_redirects=True)
 
+    def tearDown(self):
+        self.logout()
+        super(BaseLoginTestCase, self).tearDown()
+
 
 class LoginTestCase(BaseLoginTestCase):
     """ Tests related to logging in and logging out. """
@@ -41,7 +45,7 @@ class LoginTestCase(BaseLoginTestCase):
     def test_invalid_email(self):
         """ Test an invalid email address. """
         response = self.login('invaliduser', 'notfound')
-        assert 'Invalid Login requested' in response.data
+        assert 'Invalid Login' in response.data
 
     def test_blank_email(self):
         """ Test a blank email address. """
@@ -72,7 +76,7 @@ class UnauthenticatedViewTestCase(BaseTestCase):
     def test_stream_view(self):
         """ Test accessing the stream view without being logged in. """
         response = self.app.get('/index', follow_redirects=True)
-        assert 'Sign In - dogpound' in response.data
+        assert 'Welcome to dogpound' in response.data
 
 
 if __name__ == '__main__':
