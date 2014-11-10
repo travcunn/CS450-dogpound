@@ -35,8 +35,32 @@ class BaseLoginTestCase(BaseTestCase):
         return self.app.get('/logout', follow_redirects=True)
 
     def tearDown(self):
+        # logout after running all tests
         self.logout()
         super(BaseLoginTestCase, self).tearDown()
+
+
+class BaseAuthenticatedTestCase(BaseLoginTestCase):
+    """
+    Base test case for testing authenticated views.
+    """
+    def setUp(self):
+        super(BaseAuthenticatedTestCase, self).setUp()
+        self.login('vader@deathstar.com', 'noarms')
+
+    def tearDown(self):
+        super(BaseAuthenticatedTestCase, self).setUp()
+
+
+class UnauthenticatedViewTestCase(BaseTestCase):
+    """
+    Tests related to checking that unauthenticated users cannot access
+    protected resources without logging in first.
+    """
+    def test_stream_view(self):
+        """ Test accessing the stream view without being logged in. """
+        response = self.app.get('/index', follow_redirects=True)
+        assert 'Welcome to dogpound' in response.data
 
 
 class LoginTestCase(BaseLoginTestCase):
@@ -68,15 +92,9 @@ class LoginTestCase(BaseLoginTestCase):
         assert 'Home - dogpound' in response.data
 
 
-class UnauthenticatedViewTestCase(BaseTestCase):
-    """
-    Tests related to checking that unauthenticated users cannot access
-    protected resources without logging in first.
-    """
-    def test_stream_view(self):
-        """ Test accessing the stream view without being logged in. """
-        response = self.app.get('/index', follow_redirects=True)
-        assert 'Welcome to dogpound' in response.data
+class StreamTestCase(BaseAuthenticatedTestCase):
+    """ Tests related to the stream view. """
+    pass
 
 
 if __name__ == '__main__':
