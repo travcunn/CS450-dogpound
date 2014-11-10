@@ -1,12 +1,24 @@
 import os
-import unittest
+import random
+import string
 import tempfile
+import unittest
 
 from app import app, db
+from app.models import Bark, Friendship, User
+
+
+TEST_USERS = User.query.all()
+
+
+def random_string(length):
+   return ''.join(random.choice(string.lowercase) for i in range(length))
 
 
 class BaseTestCase(unittest.TestCase):
-    """ Abstract base test class for this app. """
+    """
+    Abstract base test class for this app.
+    """
     def setUp(self):
         self.db_fd, app.config['DATABASE'] = tempfile.mkstemp()
         app.config['TESTING'] = True
@@ -19,8 +31,9 @@ class BaseTestCase(unittest.TestCase):
 
 
 class BaseLoginTestCase(BaseTestCase):
-    """ Abstract test case for login testing. """
-
+    """
+    Abstract test case for login testing.
+    """
     def __init__(self, *args, **kwargs):
         super(BaseLoginTestCase, self).__init__(*args, **kwargs)
 
@@ -49,6 +62,13 @@ class BaseAuthenticatedTestCase(BaseLoginTestCase):
         self.login('vader@deathstar.com', 'noarms')
 
     def tearDown(self):
+        # Delete all barks
+        Bark.query.delete()
+        # Delete all friendships
+        Friendship.query.delete()
+
+        db.session.commit()
+
         super(BaseAuthenticatedTestCase, self).setUp()
 
 
@@ -64,8 +84,9 @@ class UnauthenticatedViewTestCase(BaseTestCase):
 
 
 class LoginTestCase(BaseLoginTestCase):
-    """ Tests related to logging in and logging out. """
-
+    """
+    Tests related to logging in and logging out.
+    """
     def test_invalid_email(self):
         """ Test an invalid email address. """
         response = self.login('invaliduser', 'notfound')
@@ -92,9 +113,71 @@ class LoginTestCase(BaseLoginTestCase):
         assert 'Home - dogpound' in response.data
 
 
-class StreamTestCase(BaseAuthenticatedTestCase):
-    """ Tests related to the stream view. """
-    pass
+class BaseBarkTestCase(BaseAuthenticatedTestCase):
+    """
+    Tests related to the stream view.
+    """
+    def create_bark(self, body):
+        """ Create a new bark given a content body. """
+        return self.app.post('/index', data={'barkBody': body},
+                             follow_redirects=True)
+
+
+class CreateBarkTestCase(BaseBarkTestCase):
+    def test_create_single_bark(self):
+        """ Test creation of a new bark. """
+        body = random_string(15)
+        self.create_bark(body)
+
+        response = self.app.get('/index', follow_redirects=True)
+        assert body in response.data
+
+    def test_create_multiple_barks(self):
+        """ Test creation of multiple barks. """
+        amount = 10
+
+        contents = [random_string(15) for x in range(amount)]
+        for content in contents:
+            self.create_bark(content)
+
+        response = self.app.get('/index', follow_redirects=True)
+        for content in contents:
+            assert content in response.data
+
+
+class ViewBarkTestCase(BaseBarkTestCase):
+    def test_view_only_friends_barks(self):
+        """ Test that the stream contains only friend's barks. """
+        user1, user1_content = TEST_USERS[0], "hello world"
+        user2, user2_content = TEST_USERS[1], "world hello"
+        user3, user3_content = TEST_USERS[2], "whats up?"
+
+        # Add user2 to user1's friends
+        friendship = Friendship()
+        friendship.user_id = user1.id
+        friendship.friend_id = user2.id
+        db.session.add(friendship)
+        db.session.commit()
+
+        # Create barks from all 3 users
+        self.logout()
+        self.login(user1.email, user1.password)
+        self.create_bark(user1_content)
+        self.logout()
+        self.login(user2.email, user2.password)
+        self.create_bark(user2_content)
+        self.logout()
+        self.login(user3.email, user3.password)
+        self.create_bark(user3_content)
+        self.logout()
+
+        # View stream as user 1
+        self.login(user1.email, user1.password)
+        response = self.app.get('/index', follow_redirects=True)
+
+        assert user1_content in response.data
+        assert user2_content in response.data
+        assert user3_content not in response.data
 
 
 if __name__ == '__main__':

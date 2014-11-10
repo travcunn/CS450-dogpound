@@ -4,9 +4,9 @@ from flask import flash, g, redirect, render_template, request, url_for
 from flask.ext.login import current_user, login_required, login_user, \
     logout_user
 
-from app import app, db, login_manager, models
+from app import app, db, login_manager
 from app.forms import BarkForm, LoginChecker, LoginForm
-from app.models import User, Bark
+from app.models import Bark, Friendship, User
 
 
 login_manager.login_view = 'login'
@@ -26,15 +26,26 @@ def index():
                     author=g.user)
         db.session.add(bark) 
         db.session.commit() # commit database add
-        form.barkBody.data = '' # clear form field for bark
 
-        # display all the barks in the database - 
-        # <<< will need to filter to own posts and friends posts only >>>
-        # order newest to oldest
-    barks = models.Bark.query.order_by('timestamp desc').all()
+    # display all the barks in the database - 
+    # <<< filter to own posts and friends posts only >>>
+    # order newest to oldest
+
+    all_barks = Bark.query.order_by(Bark.timestamp.desc()).all()
+    friendships = Friendship.query.filter(Friendship.user_id==g.user.id).all()
+    friend_ids = [x.friend_id for x in friendships]
+    valid_bark = [lambda x: x.author.id in friend_ids,
+                  lambda x: x.author==g.user]
+    def is_valid_bark(bark):
+        for rule in valid_bark:
+            if rule(bark):
+                return True
+        return False
+
+    friends_barks = [bark for bark in all_barks if is_valid_bark(bark)]
 
     return render_template('index.html', title='Home', user=g.user,
-                           barks=barks, form=form)
+                           barks=friends_barks, form=form)
 							
 
 @app.route("/login", methods=['GET', 'POST'])
