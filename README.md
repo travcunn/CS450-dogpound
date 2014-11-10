@@ -1,3 +1,5 @@
+[![Build Status](http://crunkcastle.noip.me:8080/buildStatus/icon?job=dogpound)](http://crunkcastle.noip.me:8080/job/dogpound/)
+
 dogpound
 ========
 A twitter-like service for animals other than birds.
