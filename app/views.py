@@ -3,9 +3,10 @@ from datetime import datetime
 from flask import flash, g, redirect, render_template, request, url_for
 from flask.ext.login import current_user, login_required, login_user, \
     logout_user
+from flask.ext.bcrypt import Bcrypt
 
 from app import app, db, login_manager
-from app.forms import BarkForm, LoginChecker, LoginForm
+from app.forms import BarkForm, LoginChecker, LoginForm, RegistrationForm
 from app.models import Bark, Friendship, User
 
 
@@ -26,6 +27,8 @@ def index():
                     author=g.user)
         db.session.add(bark) 
         db.session.commit() # commit database add
+        form.barkBody.data = '' # Clear form field once bark is committed
+
 
     # display all the barks in the database - 
     # <<< filter to own posts and friends posts only >>>
@@ -45,7 +48,7 @@ def index():
     friends_barks = [bark for bark in all_barks if is_valid_bark(bark)]
 
     return render_template('index.html', title='Home', user=g.user,
-                           barks=friends_barks, form=form)
+                           barks=friends_barks, form=form, loggedIn=is_logged_in())
 							
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -65,7 +68,34 @@ def login():
             return redirect(url_for('index'))
         flash('Invalid Login', 'danger')
 
-    return render_template('login.html', form=login_form)
+    return render_template('login.html', title='Log In', form=login_form)
+
+
+
+@app.route("/registration", methods=['GET', 'POST'])
+def register():
+    """Route for the registration page."""
+    bcrypt = Bcrypt(app)
+	
+    if g.user is not None and g.user.is_authenticated():
+        return redirect(url_for('index'))
+
+    registration_form = RegistrationForm(request.form)
+
+    if registration_form.validate_on_submit():
+    	pw_hash = bcrypt.generate_password_hash(registration_form.password.data) #generate hash for password
+    	user = User(firstName=registration_form.firstName.data, lastName=registration_form.lastName.data, email=registration_form.email.data, password=pw_hash)
+    	db.session.add(user)
+    	db.session.commit() #commit database add
+    	login = LoginChecker(email=request.form.get('email'), password=pw_hash)
+    	flash('Successful Registration! Please log in.', 'danger')
+	
+	# if login.is_valid:
+# 		login_user(login.lookup_user, remember=True)
+# 		return redirect(url_for('index'))
+# 	flash('Invalid Registration', 'danger')
+
+    return render_template('registration.html', title='Register', form=registration_form)
 
 
 @app.route("/logout")

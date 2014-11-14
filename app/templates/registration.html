@@ -1,0 +1,62 @@
+<!-- import base html header -->
+{% extends "base.html" %}
+
+<!-- admin page block -->
+{% block content %}
+
+	
+      <h1>Register for dogpound</h1>
+      
+      <!--   Flask-WTF form for login -->
+  <form action="" method="post" name="register">
+	<!-- hidden field implements csrf protection on the page -->
+      {{ form.hidden_tag() }}
+      <p>
+      	<!-- field to enter first name -->
+          First Name:<br>
+          {{ form.firstName(size=35) }}<br>
+			<!-- show validation errors on form in red -->
+          {% for error in form.firstName.errors %}
+          	<span style="color: maroon;">[{{ error }}]</span>
+          {% endfor %}<br>
+          
+          <!-- field to enter last name -->
+          Last Name:<br>
+          {{ form.lastName(size=35) }}<br>
+			<!-- show validation errors on form in red -->
+          {% for error in form.lastName.errors %}
+          	<span style="color: maroon;">[{{ error }}]</span>
+          {% endfor %}<br>
+      
+		<!-- field to enter email address -->
+          E-mail:<br>
+          {{ form.email(size=35) }}<br>
+			<!-- show validation errors on form in red -->
+          {% for error in form.email.errors %}
+          	<span style="color: maroon;">[{{ error }}]</span>
+          {% endfor %}<br>
+          
+          <!-- field to enter password -->
+          Password:<br>
+          {{ form.password(size=35) }}<br>
+          <!-- show validation errors on form in red -->
+          {% for error in form.password.errors %}
+          	<span style="color: maroon;">[{{ error }}]</span>
+          {% endfor %}<br>
+          
+          <!-- field to enter password -->
+          Re-Type Password:<br>
+          {{ form.password_match(size=35) }}<div id='pw_match'></div>
+          <!-- show validation errors on form in red -->
+          {% for error in form.password_match.errors %}
+          	<span style="color: maroon;">[{{ error }}]</span>
+          {% endfor %}
+          
+      </p>
+		<!-- checkbox for future feature to add "remember me" option -->
+<!--       <p>{{ form.remember_me }} Remember Me</p> -->
+      <p><input type="submit" value="Register" id="regSubmit"></p>
+  </form>
+  
+
+{% endblock %}

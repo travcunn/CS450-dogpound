@@ -15,7 +15,7 @@
           {{ form.email(size=35) }}<br>
 			<!-- show validation errors on form in red -->
           {% for error in form.email.errors %}
-          	<span style="color: red;">[{{ error }}]</span>
+          	<span style="color: maroon;">[{{ error }}]</span>
           {% endfor %}<br>
           
           <!-- field to enter password -->
@@ -23,7 +23,7 @@
           {{ form.password(size=35) }}<br>
           <!-- show validation errors on form in red -->
           {% for error in form.password.errors %}
-          	<span style="color: red;">[{{ error }}]</span>
+          	<span style="color: maroon;">[{{ error }}]</span>
           {% endfor %}<br>
           
       </p>
@@ -31,4 +31,9 @@
 <!--       <p>{{ form.remember_me }} Remember Me</p> -->
       <p><input type="submit" value="Sign In"></p>
   </form>
+  
+  <p>
+  	If you don't have an account, please <a href="/registration">Register Now</a>.
+  </p>
+  
 {% endblock %}

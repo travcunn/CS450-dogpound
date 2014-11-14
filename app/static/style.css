@@ -9,3 +9,20 @@ color: #002b5b;
 	border: 1px solid maroon;
 	width: 33%;
 }
+
+/* For flashed messages */
+li {
+color: maroon;
+list-style-type: none;
+padding: 0; 
+margin: 0;
+text-indent: -2em;
+}
+
+.valid {
+color:green;
+}
+
+.invalid {
+color:maroon;
+}

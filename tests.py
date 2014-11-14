@@ -6,6 +6,8 @@ import unittest
 
 from app import app, db
 from app.models import Bark, Friendship, User
+from flask.ext.bcrypt import Bcrypt
+bcrypt = Bcrypt(app)
 
 
 TEST_USERS = User.query.all()
@@ -59,7 +61,8 @@ class BaseAuthenticatedTestCase(BaseLoginTestCase):
     """
     def setUp(self):
         super(BaseAuthenticatedTestCase, self).setUp()
-        self.login('vader@deathstar.com', 'noarms')
+        pw_hash = bcrypt.generate_password_hash('noarms')
+        self.login('vader@deathstar.com', pw_hash)
 
     def tearDown(self):
         # Delete all barks
@@ -89,27 +92,32 @@ class LoginTestCase(BaseLoginTestCase):
     """
     def test_invalid_email(self):
         """ Test an invalid email address. """
-        response = self.login('invaliduser', 'notfound')
+        pw_hash = bcrypt.generate_password_hash('notfound')
+        response = self.login('invaliduser', pw_hash)
         assert 'Invalid Login' in response.data
 
     def test_blank_email(self):
         """ Test a blank email address. """
-        response = self.login('', 'notfound')
+        pw_hash = bcrypt.generate_password_hash('notfound')
+        response = self.login('', pw_hash)
         assert 'This field is required' in response.data
 
     def test_invalid_password(self):
         """ Test an invalid password with a valid email. """
-        response = self.login('vader@deathstar.com', 'default')
+        pw_hash = bcrypt.generate_password_hash('default')
+        response = self.login('vader@deathstar.com', pw_hash)
         assert 'Invalid Login' in response.data
 
     def test_blank_password(self):
         """ Test a blank password with a valid email. """
-        response = self.login('vader@deathstar.com', '')
+        pw_hash = bcrypt.generate_password_hash('')
+        response = self.login('vader@deathstar.com', pw_hash)
         assert 'This field is required' in response.data
 
     def test_valid_login(self):
         """ Test a valid email and a valid password. """
-        response = self.login('vader@deathstar.com', 'noarms')
+        pw_hash = bcrypt.generate_password_hash('noarms')
+        response = self.login('vader@deathstar.com', pw_hash)
         assert 'Home - dogpound' in response.data
 
 
