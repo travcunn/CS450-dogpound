@@ -7,7 +7,7 @@ $(document).ready(function(){
 	
 	if (pageName = 'registration') {
 		// event if first Password field is changed
-		$('#password').change(function(){
+		$('#password').keyup(function(){
 			if ($('#password').val() == $('#password_match').val()){
 				$('#pw_match').html($matched);
 				$('#regSubmit').show();
@@ -18,8 +18,8 @@ $(document).ready(function(){
 			};
 		});
 
-		// event if Re-Type Password field is changed
-		$('#password_match').change(function(){
+		// event if Retype Password field is changed
+		$('#password_match').keyup(function(){
 			if ($('#password').val() == $('#password_match').val()){
 				$('#pw_match').html($matched);
 				$('#regSubmit').show();

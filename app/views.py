@@ -89,6 +89,8 @@ def register():
     	db.session.commit() #commit database add
     	login = LoginChecker(email=request.form.get('email'), password=pw_hash)
     	flash('Successful Registration! Please log in.', 'danger')
+    	return redirect(url_for('login'))
+    	
 	
 	# if login.is_valid:
 # 		login_user(login.lookup_user, remember=True)

@@ -48,6 +48,14 @@ class BaseLoginTestCase(BaseTestCase):
     def logout(self):
         """ Logout from the app. """
         return self.app.get('/logout', follow_redirects=True)
+        
+    def register(self, firstName, lastName, email, password, password2):
+        """ Register user. """
+        return self.app.post('/registration', data={'firstName': firstName,
+        									'lastName': lastName,
+        									'email': email,
+        									'password': password},
+                             follow_redirects=True)
 
     def tearDown(self):
         # logout after running all tests
@@ -83,7 +91,7 @@ class UnauthenticatedViewTestCase(BaseTestCase):
     def test_stream_view(self):
         """ Test accessing the stream view without being logged in. """
         response = self.app.get('/index', follow_redirects=True)
-        assert 'Welcome to dogpound' in response.data
+        assert 'Home - dogpound' in response.data
 
 
 class LoginTestCase(BaseLoginTestCase):
@@ -92,34 +100,65 @@ class LoginTestCase(BaseLoginTestCase):
     """
     def test_invalid_email(self):
         """ Test an invalid email address. """
-        pw_hash = bcrypt.generate_password_hash('notfound')
-        response = self.login('invaliduser', pw_hash)
+        response = self.login('invaliduser', 'notfound')
         assert 'Invalid Login' in response.data
 
     def test_blank_email(self):
         """ Test a blank email address. """
-        pw_hash = bcrypt.generate_password_hash('notfound')
-        response = self.login('', pw_hash)
+        response = self.login('', 'notfound')
         assert 'This field is required' in response.data
 
     def test_invalid_password(self):
         """ Test an invalid password with a valid email. """
-        pw_hash = bcrypt.generate_password_hash('default')
-        response = self.login('vader@deathstar.com', pw_hash)
+        response = self.login('vader@deathstar.com', 'default')
         assert 'Invalid Login' in response.data
 
     def test_blank_password(self):
         """ Test a blank password with a valid email. """
-        pw_hash = bcrypt.generate_password_hash('')
-        response = self.login('vader@deathstar.com', pw_hash)
+#         pw_hash = bcrypt.generate_password_hash('')
+        response = self.login('vader@deathstar.com', '')
         assert 'This field is required' in response.data
 
     def test_valid_login(self):
         """ Test a valid email and a valid password. """
-        pw_hash = bcrypt.generate_password_hash('noarms')
-        response = self.login('vader@deathstar.com', pw_hash)
+        response = self.login('vader@deathstar.com', 'noarms')
         assert 'Home - dogpound' in response.data
 
+class RegistrationTestCase(BaseLoginTestCase):
+    """
+    Tests related to Registration.
+    """
+
+    def test_blank_firstName(self):
+        """ Test a blank first name with all others valid. """
+        response = self.register('', 'TestLast', 'test@email.com', 'test', 'test')
+        assert 'This field is required' in response.data
+        
+    def test_blank_lastName(self):
+        """ Test a blank last name with all others valid. """
+        response = self.register('TestFirst', '', 'test@email.com', 'test', 'test')
+        assert 'This field is required' in response.data
+    
+	def test_blank_email(self):
+		""" Test a blank email with all others valid. """
+        response = self.register('TestFirst', 'TestLast', '', 'test', 'test')
+        assert 'This field is required' in response.data
+     
+    def test_blank_password1(self):
+        """ Test a blank password1 with all others valid. """
+        response = self.register('TestFirst', 'TestLast', 'test@email.com', '', 'test')
+        assert 'This field is required' in response.data
+        
+    def test_blank_password2(self):
+        """ Test a blank retyped password with all others valid. """
+        response = self.register('TestFirst', 'TestLast', 'test@email.com', 'test', '')
+        assert 'This field is required' in response.data   
+        
+#     def test_unmatched_passwords(self):
+#         """ Test unmatched passwords with all others valid. """
+#         response = self.register('TestFirst', 'TestLast', 'test@email.com', 'test1', 'test')
+#         assert 'Passwords must match' in response.data
+    
 
 class BaseBarkTestCase(BaseAuthenticatedTestCase):
     """

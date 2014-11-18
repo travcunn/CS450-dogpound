@@ -17,7 +17,7 @@
           {{ form.firstName(size=35) }}<br>
 			<!-- show validation errors on form in red -->
           {% for error in form.firstName.errors %}
-          	<span style="color: maroon;">[{{ error }}]</span>
+          	<span class='invalid'>[{{ error }}]</span>
           {% endfor %}<br>
           
           <!-- field to enter last name -->
@@ -25,7 +25,7 @@
           {{ form.lastName(size=35) }}<br>
 			<!-- show validation errors on form in red -->
           {% for error in form.lastName.errors %}
-          	<span style="color: maroon;">[{{ error }}]</span>
+          	<span class='invalid'>[{{ error }}]</span>
           {% endfor %}<br>
       
 		<!-- field to enter email address -->
@@ -33,7 +33,7 @@
           {{ form.email(size=35) }}<br>
 			<!-- show validation errors on form in red -->
           {% for error in form.email.errors %}
-          	<span style="color: maroon;">[{{ error }}]</span>
+          	<span class='invalid'>[{{ error }}]</span>
           {% endfor %}<br>
           
           <!-- field to enter password -->
@@ -41,15 +41,15 @@
           {{ form.password(size=35) }}<br>
           <!-- show validation errors on form in red -->
           {% for error in form.password.errors %}
-          	<span style="color: maroon;">[{{ error }}]</span>
+          	<span class='invalid'>[{{ error }}]</span>
           {% endfor %}<br>
           
           <!-- field to enter password -->
-          Re-Type Password:<br>
+          Retype Password:<br>
           {{ form.password_match(size=35) }}<div id='pw_match'></div>
           <!-- show validation errors on form in red -->
           {% for error in form.password_match.errors %}
-          	<span style="color: maroon;">[{{ error }}]</span>
+          	<span class='invalid'>[{{ error }}]</span>
           {% endfor %}
           
       </p>
