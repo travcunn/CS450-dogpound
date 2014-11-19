@@ -12,9 +12,9 @@
             <p>
             <!-- Title for barking form field-->
                 Post new bark:<br>
-                {{ form.barkBody(size=80) }}<br>
+                {{ form.barkBody(size=80) }}<p>Characters Remaining: <div id='barkCount' class='valid'>140</div></p>
             </p>
-            <p><input type="submit" value="Bark"></p>
+            <p><input type="submit" value="Bark" id="barkSubmit"></p>
         </form>
     
         <h3>Dogfeed:</h3>

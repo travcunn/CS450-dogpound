@@ -1,7 +1,11 @@
-<link rel='stylesheet' type='text/css' href='/static/style.css'/>
-
+<!DOCTYPE html>
 <html>
   <head>
+	<link rel='stylesheet' type='text/css' href='../static/style.css'/>
+	<script src='../static/jquery.js'></script>
+	<script type='text/javascript' src='../static/pw_script.js'></script>
+	<script type='text/javascript' src='../static/bark_script.js'></script>
+
 <!-- pulls title from view.py or displays default -->
 	  {% if title %}
 		<title>{{ title }} - dogpound</title>
@@ -12,22 +16,24 @@
   <body>
     <div>
     	<h2>
-	    	<img src="/static/paw.png" alt="dogpound" height='20em' width='20em'>
+	    	<img src='/static/paw.png' alt='dogpound' height='20em' width='20em'>
     		dogpound 
 		</h2>
 		<h3>
-			<a href="/index">Dogfeed</a>
-			--- 
+			<a href='/index'>Dogfeed</a> 
+				<img src='/static/paw.png' alt='dogpound' height='10em' width='10em'>
 <!-- If user is logged in then we don't want to show the login button -->
-		{% if is_logged_in %}
-			<a href="/logout">Log Out</a> 
+		{% if loggedIn %}
+			<a href='/logout'>Log Out</a> 
 		{% else %}
-			<a href="/login">Log In</a> --- <a href="/logout">Log Out</a> 
+			<a href='/registration'>Register</a>
+				<img src='/static/paw.png' alt='dogpound' height='10em' width='10em'>
+			<a href='/login'>Log In</a> 
 		{% endif %}
 		</h3>
     </div>
     <hr>
-<!--  message to flash on login page when a user logs out -->
+<!--  message to flash on login page when a user logs out or invalid login/registration -->
 <!--     We could use some js to remove the message after so many seconds -->
     {% with messages = get_flashed_messages() %}
     	{% if messages %}
