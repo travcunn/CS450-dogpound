@@ -51,3 +51,9 @@ Test Users
 - vader@deathstar.com - noarms
 - luke@rebelbase.com - TwinSister
 - test@google.com - google1
+- doc@delorean.com - Clara
+- marty@delorean.com - Jennifer
+- harry@gasman.com - Samsonite
+- lloyd@aspen.com - PillsAreGood
+- han@falcon.com - Carbonite
+- ben@mail.com - OldMan
