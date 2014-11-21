@@ -44,13 +44,63 @@
           	<span class='invalid'>[{{ error }}]</span>
           {% endfor %}<br>
           
-          <!-- field to enter password -->
+          <!-- field to retype password -->
           Retype Password:<br>
           {{ form.password_match(size=35) }}<div id='pw_match'></div>
           <!-- show validation errors on form in red -->
           {% for error in form.password_match.errors %}
           	<span class='invalid'>[{{ error }}]</span>
-          {% endfor %}
+          {% endfor %}<br>
+          
+          <h3 style='text-decoration: underline'> Security Questions </h3>
+          
+          <!-- field to enter Security Question 1 -->
+          Question 1:<br>
+          {{ form.securityQuestion1(size=35) }}<br>
+          <!-- show validation errors on form in red -->
+          {% for error in form.securityQuestion1.errors %}
+          	<span class='invalid'>[{{ error }}]</span>
+          {% endfor %}<br>
+          
+          <!-- field to enter Security Answer 1 -->
+          Answer 1:<br>
+          {{ form.securityAnswer1(size=35) }}<br>
+          <!-- show validation errors on form in red -->
+          {% for error in form.securityAnswer1.errors %}
+          	<span class='invalid'>[{{ error }}]</span>
+          {% endfor %}<br>
+          
+          <!-- field to enter Security Question 2 -->
+          Question 2:<br>
+          {{ form.securityQuestion2(size=35) }}<br>
+          <!-- show validation errors on form in red -->
+          {% for error in form.securityQuestion2.errors %}
+          	<span class='invalid'>[{{ error }}]</span>
+          {% endfor %}<br>
+          
+          <!-- field to enter Security Answer 2 -->
+          Answer 2:<br>
+          {{ form.securityAnswer2(size=35) }}<br>
+          <!-- show validation errors on form in red -->
+          {% for error in form.securityAnswer2.errors %}
+          	<span class='invalid'>[{{ error }}]</span>
+          {% endfor %}<br>
+          
+          <!-- field to enter Security Question 3 -->
+          Question 3:<br>
+          {{ form.securityQuestion3(size=35) }}<br>
+          <!-- show validation errors on form in red -->
+          {% for error in form.securityQuestion3.errors %}
+          	<span class='invalid'>[{{ error }}]</span>
+          {% endfor %}<br>
+          
+          <!-- field to enter Security Answer 3 -->
+          Answer 3:<br>
+          {{ form.securityAnswer3(size=35) }}<br>
+          <!-- show validation errors on form in red -->
+          {% for error in form.securityAnswer3.errors %}
+          	<span class='invalid'>[{{ error }}]</span>
+          {% endfor %}<br>
           
       </p>
 		<!-- checkbox for future feature to add "remember me" option -->

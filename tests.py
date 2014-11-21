@@ -5,6 +5,7 @@ import tempfile
 import unittest
 
 from app import app, db
+from app.views import set_user
 from app.models import Bark, Friendship, User
 from flask.ext.bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
@@ -49,11 +50,33 @@ class BaseLoginTestCase(BaseTestCase):
         """ Logout from the app. """
         return self.app.get('/logout', follow_redirects=True)
         
-    def register(self, firstName, lastName, email, password, password2):
+    def register(self, firstName, lastName, email, password, password2, 
+    				securityQuestion1, securityQuestion2, securityQuestion3, 
+    				securityAnswer1, securityAnswer2, securityAnswer3,):
         """ Register user. """
         return self.app.post('/registration', data={'firstName': firstName,
         									'lastName': lastName,
         									'email': email,
+        									'password': password,
+        									'securityQuestion1': securityQuestion1,
+        									'securityQuestion2': securityQuestion2,
+        									'securityQuestion3': securityQuestion3,
+        									'securityAnswer1': securityAnswer1,
+        									'securityAnswer2': securityAnswer2,
+        									'securityAnswer3': securityAnswer3},
+                             follow_redirects=True)
+    
+    def forgotPassword(self, email):
+        """ Forgot password - enter email. """
+        return self.app.post('/forgotPassword', data={'email': email},
+                             follow_redirects=True)
+                             
+    def resetPassword(self, email, securityAnswer1, securityAnswer2, securityAnswer3, password, password2):
+        """ Reset Password - Answer Security Questions. """
+        set_user(email)
+        return self.app.post('/resetPassword', data={'securityAnswer1': securityAnswer1,
+        									'securityAnswer2': securityAnswer2,
+        									'securityAnswer3': securityAnswer3,
         									'password': password},
                              follow_redirects=True)
 
@@ -74,9 +97,9 @@ class BaseAuthenticatedTestCase(BaseLoginTestCase):
 
     def tearDown(self):
         # Delete all barks
-        Bark.query.delete()
+        #Bark.query.delete()
         # Delete all friendships
-        Friendship.query.delete()
+        #Friendship.query.delete()
 
         db.session.commit()
 
@@ -131,34 +154,98 @@ class RegistrationTestCase(BaseLoginTestCase):
 
     def test_blank_firstName(self):
         """ Test a blank first name with all others valid. """
-        response = self.register('', 'TestLast', 'test@email.com', 'test', 'test')
+        response = self.register('', 'TestLast', 'test@email.com', 'test', 'test', 
+        	'What was your first pet\'s name?', 'spike', 'Favorite Food?', 'Pizza', 'School Name?', 'IUPUI')
         assert 'This field is required' in response.data
         
     def test_blank_lastName(self):
         """ Test a blank last name with all others valid. """
-        response = self.register('TestFirst', '', 'test@email.com', 'test', 'test')
+        response = self.register('TestFirst', '', 'test@email.com', 'test', 'test', 
+        	'What was your first pet\'s name?', 'spike', 'Favorite Food?', 'Pizza', 'School Name?', 'IUPUI')
         assert 'This field is required' in response.data
     
 	def test_blank_email(self):
 		""" Test a blank email with all others valid. """
-        response = self.register('TestFirst', 'TestLast', '', 'test', 'test')
+        response = self.register('TestFirst', 'TestLast', '', 'test', 'test', 
+        	'What was your first pet\'s name?', 'spike', 'Favorite Food?', 'Pizza', 'School Name?', 'IUPUI')
         assert 'This field is required' in response.data
      
     def test_blank_password1(self):
         """ Test a blank password1 with all others valid. """
-        response = self.register('TestFirst', 'TestLast', 'test@email.com', '', 'test')
+        response = self.register('TestFirst', 'TestLast', 'test@email.com', '', 'test', 
+        	'What was your first pet\'s name?', 'spike', 'Favorite Food?', 'Pizza', 'School Name?', 'IUPUI')
         assert 'This field is required' in response.data
         
     def test_blank_password2(self):
         """ Test a blank retyped password with all others valid. """
-        response = self.register('TestFirst', 'TestLast', 'test@email.com', 'test', '')
+        response = self.register('TestFirst', 'TestLast', 'test@email.com', 'test', '', 
+        	'What was your first pet\'s name?', 'spike', 'Favorite Food?', 'Pizza', 'School Name?', 'IUPUI')
+        assert 'This field is required' in response.data
+    
+    def test_blank_securityQuestion1(self):
+        """ Test a blank security question 1 with all others valid. """
+        response = self.register('TestFirst', 'TestLast', 'test@email.com', 'test', 'test', 
+        	'', 'spike', 'Favorite Food?', 'Pizza', 'School Name?', 'IUPUI')
+        assert 'This field is required' in response.data
+        
+    def test_blank_securityAnswer1(self):
+        """ Test a blank security answer 1 with all others valid. """
+        response = self.register('TestFirst', 'TestLast', 'test@email.com', 'test', 'test', 
+        	'What was your first pet\'s name?', '', 'Favorite Food?', 'Pizza', 'School Name?', 'IUPUI')
         assert 'This field is required' in response.data   
         
-#     def test_unmatched_passwords(self):
-#         """ Test unmatched passwords with all others valid. """
-#         response = self.register('TestFirst', 'TestLast', 'test@email.com', 'test1', 'test')
-#         assert 'Passwords must match' in response.data
-    
+    def test_blank_securityQuestion2(self):
+        """ Test a blank security question 2 with all others valid. """
+        response = self.register('TestFirst', 'TestLast', 'test@email.com', 'test', 'test', 
+        	'What was your first pet\'s name?', 'spike', '', 'Pizza', 'School Name?', 'IUPUI')
+        assert 'This field is required' in response.data   
+        
+    def test_blank_securityAnswer2(self):
+        """ Test a blank security answer 2 with all others valid. """
+        response = self.register('TestFirst', 'TestLast', 'test@email.com', 'test', 'test', 
+        	'What was your first pet\'s name?', 'spike', 'Favorite Food?', '', 'School Name?', 'IUPUI')
+        assert 'This field is required' in response.data   
+        
+    def test_blank_securityQuestion3(self):
+        """ Test a blank security question 3 with all others valid. """
+        response = self.register('TestFirst', 'TestLast', 'test@email.com', 'test', 'test', 
+        	'What was your first pet\'s name?', 'spike', 'Favorite Food?', 'Pizza', '', 'IUPUI')
+        assert 'This field is required' in response.data   
+        
+    def test_blank_securityAnswer3(self):
+        """ Test a blank security answer 3 with all others valid. """
+        response = self.register('TestFirst', 'TestLast', 'test@email.com', 'test', 'test', 
+        	'What was your first pet\'s name?', 'spike', 'Favorite Food?', 'Pizza', 'School Name?', '')
+        assert 'This field is required' in response.data
+
+class ResetPWTestCase(BaseLoginTestCase):
+    """
+    Tests related to resetting password.
+    """
+    def test_invalid_email(self):
+        """ Test an invalid email address. """
+        response = self.forgotPassword('invaliduser')
+        assert 'Invalid User Email' in response.data
+
+    def test_blank_email(self):
+        """ Test a blank email address. """
+        response = self.forgotPassword('')
+        assert 'This field is required' in response.data
+
+    def test_blank_answer1(self):
+        """ Test a blank answer 1. """
+        response = self.resetPassword('email', '', 'answer', 'answer', 'password', 'password')
+        assert 'This field is required' in response.data
+        
+    def test_blank_answer2(self):
+    	""" Test a blank answer 2. """
+    	response = self.resetPassword('email', 'answer', '', 'answer', 'password', 'password')
+    	assert 'This field is required' in response.data
+    	
+    def test_blank_answer3(self):
+    	""" Test a blank answer 3. """
+    	response = self.resetPassword('email', 'answer', 'answer', '', 'password', 'password')
+    	assert 'This field is required' in response.data
 
 class BaseBarkTestCase(BaseAuthenticatedTestCase):
     """

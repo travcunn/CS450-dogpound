@@ -16,6 +16,18 @@
             </p>
             <p><input type="submit" value="Bark" id="barkSubmit"></p>
         </form>
+        
+		<!-- Form to allow users to follow other users -->
+        <form action="" method="post" name="follow">
+            <!-- hidden field implements csrf protection on the page -->
+            {{ followForm.hidden_tag() }}
+            <p>
+            <!-- Title for following user form field-->
+                Follow new user by E-mail:<br>
+                {{ followForm.email(size=30) }}
+            </p>
+            <p><input type="submit" value="Follow" id="followSubmit"></p>
+        </form>
     
         <h3>Dogfeed:</h3>
         <!-- Loop through and display all barks in database -->

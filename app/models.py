@@ -10,6 +10,14 @@ class User(db.Model):
     firstName = db.Column(db.String(80))
     lastName = db.Column(db.String(80))
     password = db.Column(db.String(20))
+    securityQuestion1 = db.Column(db.String(100))
+    securityAnswer1 = db.Column(db.String(30))
+    securityQuestion2 = db.Column(db.String(100))
+    securityAnswer2 = db.Column(db.String(30))
+    securityQuestion3 = db.Column(db.String(100))
+    securityAnswer3 = db.Column(db.String(30))
+
+    
     #  adds relationship between User and Barks so a user's barks can be displayed
     barks = db.relationship('Bark', backref='author', lazy='dynamic')
         

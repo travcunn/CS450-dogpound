@@ -20,7 +20,5 @@ $(document).ready(function(){
  				$('#barkSubmit').hide();
  			};
 		});
-
 	} // end if statement to check page name
-
 });

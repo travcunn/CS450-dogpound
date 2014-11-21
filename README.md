@@ -48,12 +48,22 @@ make run
 
 Test Users
 ==========
-- vader@deathstar.com - noarms
-- luke@rebelbase.com - TwinSister
+Users are following other users from the same movie.
+
+- vader@deathstar.com - noarms (Darth Vader)
+- luke@rebelbase.com - TwinSister (Luke Skywalker)
 - test@google.com - google1
-- doc@delorean.com - Clara
-- marty@delorean.com - Jennifer
-- harry@gasman.com - Samsonite
-- lloyd@aspen.com - PillsAreGood
-- han@falcon.com - Carbonite
-- ben@mail.com - OldMan
+- doc@delorean.com - Clara (Emmett Brown)
+- marty@delorean.com - Jennifer (Marty McFly)
+- harry@gasman.com - Samsonite (Harry Dunne)
+- lloyd@aspen.com - PillsAreGood (Lloyd Christmas)
+- han@falcon.com - Carbonite (Han Solo)
+- ben@mail.com - OldMan (Obi-wan Kenobi)
+- junior@gmail.com - Snakes (Indiana Jones)
+
+Answers to security questions are the same for all users except junior
+Food - Burgers
+Pet - Spot
+Year Born - 1908
+
+Test Database is backed up as CSV files userDB, friendsDB, barksDB
