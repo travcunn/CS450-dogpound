@@ -1,6 +1,9 @@
 clean:
 	find . -name *.pyc -delete
 
+db-create:
+	python db_create.py
+
 run:
 	python run.py
 
