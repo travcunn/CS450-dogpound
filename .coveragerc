@@ -1,0 +1,11 @@
+[run]
+omit =
+    tests.py
+include =
+    app/*
+
+[report]
+exclude_lines =
+    if __name__ == .__main__.:
+    pragma: no cover
+    def __str__
