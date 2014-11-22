@@ -5,7 +5,6 @@ import tempfile
 import unittest
 
 from app import app, db
-from app.views import set_user
 from app.models import Bark, Friendship, User
 from flask.ext.bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
@@ -51,19 +50,23 @@ class BaseLoginTestCase(BaseTestCase):
         return self.app.get('/logout', follow_redirects=True)
         
     def register(self, firstName, lastName, email, password, password2, 
-    				securityQuestion1, securityQuestion2, securityQuestion3, 
-    				securityAnswer1, securityAnswer2, securityAnswer3,):
+    		 securityQuestion1, securityQuestion2, securityQuestion3, 
+    		 securityAnswer1, securityAnswer2, securityAnswer3):
         """ Register user. """
-        return self.app.post('/registration', data={'firstName': firstName,
-        									'lastName': lastName,
-        									'email': email,
-        									'password': password,
-        									'securityQuestion1': securityQuestion1,
-        									'securityQuestion2': securityQuestion2,
-        									'securityQuestion3': securityQuestion3,
-        									'securityAnswer1': securityAnswer1,
-        									'securityAnswer2': securityAnswer2,
-        									'securityAnswer3': securityAnswer3},
+        registration_data = {
+            'firstName': firstName,
+            'lastName': lastName,
+            'email': email,
+            'password': password,
+            'securityQuestion1': securityQuestion1,
+            'securityQuestion2': securityQuestion2,
+            'securityQuestion3': securityQuestion3,
+            'securityAnswer1': securityAnswer1,
+            'securityAnswer2': securityAnswer2,
+            'securityAnswer3': securityAnswer3
+        }
+
+        return self.app.post('/registration', data=registration_data,
                              follow_redirects=True)
     
     def forgotPassword(self, email):
@@ -71,13 +74,17 @@ class BaseLoginTestCase(BaseTestCase):
         return self.app.post('/forgotPassword', data={'email': email},
                              follow_redirects=True)
                              
-    def resetPassword(self, email, securityAnswer1, securityAnswer2, securityAnswer3, password, password2):
+    def resetPassword(self, email, securityAnswer1, securityAnswer2,
+                      securityAnswer3, password, password2):
         """ Reset Password - Answer Security Questions. """
-        set_user(email)
-        return self.app.post('/resetPassword', data={'securityAnswer1': securityAnswer1,
-        									'securityAnswer2': securityAnswer2,
-        									'securityAnswer3': securityAnswer3,
-        									'password': password},
+        self.forgotPassword(email)
+
+        reset_data = {'securityAnswer1': securityAnswer1,
+                      'securityAnswer2': securityAnswer2,
+        	      'securityAnswer3': securityAnswer3,
+        	      'password': password}
+
+        return self.app.post('/resetPassword', data=reset_data,
                              follow_redirects=True)
 
     def tearDown(self):
@@ -97,9 +104,9 @@ class BaseAuthenticatedTestCase(BaseLoginTestCase):
 
     def tearDown(self):
         # Delete all barks
-        #Bark.query.delete()
+        Bark.query.delete()
         # Delete all friendships
-        #Friendship.query.delete()
+        Friendship.query.delete()
 
         db.session.commit()
 

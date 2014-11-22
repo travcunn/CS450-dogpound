@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from flask import flash, g, redirect, render_template, request, url_for
+from flask import flash, g, redirect, render_template, request, session, \
+    url_for
 from flask.ext.login import current_user, login_required, login_user, \
     logout_user
 from flask.ext.bcrypt import Bcrypt
@@ -9,10 +10,9 @@ from app import app, db, login_manager
 from app.forms import BarkForm, LoginChecker, LoginForm, EmailForm, RegistrationForm, ForgotPWChecker, ResetPWChecker, ResetPasswordForm, FollowForm
 from app.models import Bark, Friendship, User
 
+
 login_manager.login_view = 'login'
 
-global tempUser
-tempUser =''
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -84,7 +84,7 @@ def forgotPassword():
 
     login_form = EmailForm(request.form)
     all_users = User.query.all()
-    set_user(request.form.get('email'))
+    session['forgotPasswordEmail'] = request.form.get('email')
     
     if login_form.validate_on_submit():
     	for user in all_users:
@@ -103,7 +103,7 @@ def resetPassword():
 #         return redirect(url_for('index'))
 	
     questions_form = ResetPasswordForm(request.form)
-    user = User.query.filter_by(email=get_user()).first()
+    user = User.query.filter_by(email=session['forgotPasswordEmail']).first()
 	
     if questions_form.validate_on_submit():
     	resetPW = ResetPWChecker(email=user.email, securityAnswer1=questions_form.securityAnswer1.data,
@@ -185,12 +185,3 @@ def before_request():
 def load_user(id):
     """Returns a user, given a user id."""
     return User.query.get(int(id))
-    
-def set_user(userEmail):
-    """Returns a user, given a user email."""
-    global tempUser1
-    tempUser1 = userEmail
-
-def get_user():
-    """Returns a user, given a user email."""
-    return tempUser1
