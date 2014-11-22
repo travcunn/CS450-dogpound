@@ -99,8 +99,7 @@ class BaseAuthenticatedTestCase(BaseLoginTestCase):
     """
     def setUp(self):
         super(BaseAuthenticatedTestCase, self).setUp()
-        pw_hash = bcrypt.generate_password_hash('noarms')
-        self.login('vader@deathstar.com', pw_hash)
+        self.login('vader@deathstar.com', 'noarms')
 
     def tearDown(self):
         # Delete all barks
@@ -253,6 +252,7 @@ class ResetPWTestCase(BaseLoginTestCase):
     	""" Test a blank answer 3. """
     	response = self.resetPassword('email', 'answer', 'answer', '', 'password', 'password')
     	assert 'This field is required' in response.data
+
 
 class BaseBarkTestCase(BaseAuthenticatedTestCase):
     """
