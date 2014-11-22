@@ -10,9 +10,6 @@ from flask.ext.bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
 
 
-TEST_USERS = User.query.all()
-
-
 def random_string(length):
    return ''.join(random.choice(string.lowercase) for i in range(length))
 
@@ -120,7 +117,7 @@ class UnauthenticatedViewTestCase(BaseTestCase):
     def test_stream_view(self):
         """ Test accessing the stream view without being logged in. """
         response = self.app.get('/index', follow_redirects=True)
-        assert 'Home - dogpound' in response.data
+        assert 'Log In - dogpound' in response.data
 
 
 class LoginTestCase(BaseLoginTestCase):
@@ -289,9 +286,18 @@ class CreateBarkTestCase(BaseBarkTestCase):
 class ViewBarkTestCase(BaseBarkTestCase):
     def test_view_only_friends_barks(self):
         """ Test that the stream contains only friend's barks. """
-        user1, user1_content = TEST_USERS[0], "hello world"
-        user2, user2_content = TEST_USERS[1], "world hello"
-        user3, user3_content = TEST_USERS[2], "whats up?"
+        
+        user1 = User.query.filter(User.email=='vader@deathstar.com').first()
+        user2 = User.query.filter(User.email=='luke@rebelbase.com').first()
+        user3 = User.query.filter(User.email=='marty@delorean.com').first()
+
+        user1_pass = 'noarms'
+        user2_pass = 'TwinSister'
+        user3_pass = 'Jennifer'
+
+        user1_content = "hello world"
+        user2_content = "world hello"
+        user3_content = "whats up?"
 
         # Add user2 to user1's friends
         friendship = Friendship()
@@ -300,20 +306,24 @@ class ViewBarkTestCase(BaseBarkTestCase):
         db.session.add(friendship)
         db.session.commit()
 
+        user1 = User.query.filter(User.email=='vader@deathstar.com').first()
+        user2 = User.query.filter(User.email=='luke@rebelbase.com').first()
+        user3 = User.query.filter(User.email=='marty@delorean.com').first()
+
         # Create barks from all 3 users
         self.logout()
-        self.login(user1.email, user1.password)
+        self.login(user1.email, user1_pass)
         self.create_bark(user1_content)
         self.logout()
-        self.login(user2.email, user2.password)
+        self.login(user2.email, user2_pass)
         self.create_bark(user2_content)
         self.logout()
-        self.login(user3.email, user3.password)
+        self.login(user3.email, user3_pass)
         self.create_bark(user3_content)
         self.logout()
 
         # View stream as user 1
-        self.login(user1.email, user1.password)
+        self.login(user1.email, user1_pass)
         response = self.app.get('/index', follow_redirects=True)
 
         assert user1_content in response.data
