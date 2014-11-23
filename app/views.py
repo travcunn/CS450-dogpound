@@ -44,6 +44,7 @@ def index():
     valid_bark = [lambda x: x.author.id in friend_ids,
                   lambda x: x.author==g.user]
     def is_valid_bark(bark):
+        """ Returns true if a bark belongs in the user timeline. """
         for rule in valid_bark:
             if rule(bark):
                 return True
@@ -133,27 +134,26 @@ def forgotPassword():
 def resetPassword():
     """Route for the reset password page."""
     bcrypt = Bcrypt(app)
-    # if g.user is not None and g.user.is_authenticated():
-#         return redirect(url_for('index'))
 	
     questions_form = ResetPasswordForm(request.form)
     user = User.query.filter_by(email=session['forgotPasswordEmail']).first()
 	
     if questions_form.validate_on_submit():
-    	resetPW = ResetPWChecker(email=user.email, securityAnswer1=questions_form.securityAnswer1.data,
-    		securityAnswer2=questions_form.securityAnswer2.data,
-    		securityAnswer3=questions_form.securityAnswer3.data)
-    	if resetPW.is_valid:
-    		pw_hash = bcrypt.generate_password_hash(questions_form.password.data)
-    		user.password = pw_hash
-    		db.session.commit()
-    		flash('Password reset! Please log in.', 'danger')
-    		return redirect(url_for('login'))
-    	flash('Answers to security questions incorrect. Please try again.',
+        resetPW = ResetPWChecker(email=user.email, 
+                                 securityAnswer1=questions_form.securityAnswer1.data,
+                                 securityAnswer2=questions_form.securityAnswer2.data,
+    		                 securityAnswer3=questions_form.securityAnswer3.data)
+        if resetPW.is_valid:
+            pw_hash = bcrypt.generate_password_hash(questions_form.password.data)
+            user.password = pw_hash
+            db.session.commit()
+            flash('Password reset! Please log in.', 'danger')
+            return redirect(url_for('login'))
+        flash('Answers to security questions incorrect. Please try again.',
               'danger')
-    	return redirect(url_for('forgotPassword'))
-    	
-    	
+        return redirect(url_for('forgotPassword'))
+
+	
     return render_template('resetPassword.html', title='Reset Password',
                            form=questions_form, user=user)
 
@@ -162,28 +162,27 @@ def resetPassword():
 def register():
     """Route for the registration page."""
     bcrypt = Bcrypt(app)
-	
+
     if g.user is not None and g.user.is_authenticated():
         return redirect(url_for('index'))
 
     registration_form = RegistrationForm(request.form)
 
     if registration_form.validate_on_submit():
-    	pw_hash = bcrypt.generate_password_hash(registration_form.password.data) #generate hash for password
-    	user = User(firstName=registration_form.firstName.data, 
-    		    lastName=registration_form.lastName.data, 
-    		    email=registration_form.email.data, 
-    		    password=pw_hash,
-    		    securityQuestion1=registration_form.securityQuestion1.data,
-    		    securityAnswer1=registration_form.securityAnswer1.data,
-    		    securityQuestion2=registration_form.securityQuestion2.data,
-    		    securityAnswer2=registration_form.securityAnswer2.data,
-    		    securityQuestion3=registration_form.securityQuestion3.data,
-    		    securityAnswer3=registration_form.securityAnswer3.data)
-    	db.session.add(user)
-    	db.session.commit() #commit database add
-    	login = LoginChecker(email=request.form.get('email'),
-                             password=pw_hash)
+        pw_hash = bcrypt.generate_password_hash(registration_form.password.data) #generate hash for password
+        user = User(firstName=registration_form.firstName.data, 
+                    lastName=registration_form.lastName.data, 
+                    email=registration_form.email.data, 
+                    password=pw_hash,
+                    securityQuestion1=registration_form.securityQuestion1.data,
+                    securityAnswer1=registration_form.securityAnswer1.data,
+                    securityQuestion2=registration_form.securityQuestion2.data,
+                    securityAnswer2=registration_form.securityAnswer2.data,
+                    securityQuestion3=registration_form.securityQuestion3.data,
+                    securityAnswer3=registration_form.securityAnswer3.data)
+        db.session.add(user)
+        db.session.commit() #commit database add
+        LoginChecker(email=request.form.get('email'), password=pw_hash)
     	flash('Successful Registration! Please log in.', 'danger')
     	return redirect(url_for('login'))
     	
@@ -198,7 +197,7 @@ def register():
 
 @app.route("/logout")
 def logout():
-    """Redirect page for invalid logins."""  
+    """Redirect page for invalid logins."""
     logout_user()
 #     flash('You have been logged out.')
     return redirect(url_for('login'))
@@ -218,6 +217,6 @@ def before_request():
 
 
 @login_manager.user_loader
-def load_user(id):
+def load_user(user_id):
     """Returns a user, given a user id."""
-    return User.query.get(int(id))
+    return User.query.get(int(user_id))

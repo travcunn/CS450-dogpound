@@ -22,21 +22,25 @@ class User(db.Model):
     barks = db.relationship('Bark', backref='author', lazy='dynamic')
         
     def is_authenticated(self):
+        """ Returns authentication status of a user. """
         return True
 
     def is_active(self):
+        """ Returns true if the user is active. """
         return True
 
     def is_anonymous(self):
+        """ Returns true if the user is anonymous. """
         return False
 
     def get_id(self):
+        """ Rreturns the id of a user. """
         return unicode(self.id)
 
     def __repr__(self):
         return '<User %r>' % (self.email)
-      
-        
+ 
+
 class Bark(db.Model):
     """
     Bark class for collection of barks in the feed.
