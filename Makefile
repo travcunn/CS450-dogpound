@@ -9,6 +9,7 @@ run:
 
 jenkins-test:
 	nosetests --with-coverage --with-xunit --cover-package=app --cover-erase
+	pylint -f parseable app/ | tee pylint.out
 
 test: coverage-run coverage-report
 
