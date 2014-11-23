@@ -18,7 +18,7 @@
         </form>
         
 		<!-- Form to allow users to follow other users -->
-        <form action="" method="post" name="follow">
+        <form action="/follow" method="post" name="follow">
             <!-- hidden field implements csrf protection on the page -->
             {{ followForm.hidden_tag() }}
             <p>

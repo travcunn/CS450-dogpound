@@ -54,7 +54,39 @@ def index():
     return render_template('index.html', title='Home', user=g.user,
                            barks=friends_barks, form=form,
                            followForm=follow_form, loggedIn=is_logged_in())
-							
+
+
+@app.route('/follow', methods=['POST'])
+@login_required
+def follow_user():
+    """ View for following a user."""
+    follow_form = FollowForm(request.form)
+	
+    if follow_form.validate_on_submit():
+        user_to_follow = User.query.filter(User.email==follow_form.email.data).first()
+        if user_to_follow is None:
+            flash("User with that email does not exist.")
+            return redirect(url_for('index'))
+
+        friendship = Friendship.query.filter(
+                        Friendship.user_id==g.user.id and \
+                        Friendship.friend_id==user_to_follow).first()
+
+        if friendship is not None:
+            flash("You are already following this user.")
+            return redirect(url_for('index'))
+
+
+        # Add user2 to user1's friends
+        friendship = Friendship()
+        friendship.user_id = g.user.id
+        friendship.friend_id = user_to_follow.id
+        db.session.add(friendship)
+        db.session.commit()
+
+        flash("You are now following %s" % user_to_follow.email)
+    return redirect(url_for('index'))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

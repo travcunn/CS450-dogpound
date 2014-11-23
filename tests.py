@@ -347,6 +347,11 @@ class FollowUserTestCase(BaseAuthenticatedTestCase):
         response = self.follow_user('luke@rebelbase.com') 
         assert "You are now following luke@rebelbase.com" in response.data
 
+    def test_follow_invalid_user(self):
+        """ Test following an invalid user. """
+        response = self.follow_user('abcdefg@googlecom') 
+        assert "User with that email does not exist." in response.data
+
     def test_follow_user_already_followed(self):
         """ Test following a user that is already being followed. """
         self.follow_user('doc@delorean.com') 
