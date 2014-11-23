@@ -61,7 +61,7 @@ def index():
 def follow_user():
     """ View for following a user."""
     follow_form = FollowForm(request.form)
-	
+
     if follow_form.validate_on_submit():
         user_to_follow = User.query.filter(User.email==follow_form.email.data).first()
         if user_to_follow is None:
@@ -98,10 +98,10 @@ def login():
     login_form = LoginForm(request.form)
 
     if login_form.validate_on_submit():
-        login = LoginChecker(email=request.form.get('email'),
-                             password=request.form.get('password'))
-        if login.is_valid:
-            login_user(login.lookup_user, remember=True)
+        login_validator = LoginChecker(email=request.form.get('email'),
+                                       password=request.form.get('password'))
+        if login_validator.is_valid:
+            login_user(login_validator.lookup_user, remember=True)
             return redirect(url_for('index'))
         flash('Invalid Login', 'danger')
 
