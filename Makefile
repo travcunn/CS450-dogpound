@@ -17,7 +17,7 @@ coverage-run:
 	coverage run tests.py
 
 coverage-report:
-	coverage report
+	coverage report -m
 
 install:
 	pip install -r requirements.txt

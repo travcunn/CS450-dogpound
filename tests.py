@@ -44,27 +44,7 @@ class BaseLoginTestCase(BaseTestCase):
 
     def logout(self):
         """ Logout from the app. """
-        return self.app.get('/logout', follow_redirects=True)
-        
-    def register(self, firstName, lastName, email, password, password2, 
-    		 securityQuestion1, securityQuestion2, securityQuestion3, 
-    		 securityAnswer1, securityAnswer2, securityAnswer3):
-        """ Register user. """
-        registration_data = {
-            'firstName': firstName,
-            'lastName': lastName,
-            'email': email,
-            'password': password,
-            'securityQuestion1': securityQuestion1,
-            'securityQuestion2': securityQuestion2,
-            'securityQuestion3': securityQuestion3,
-            'securityAnswer1': securityAnswer1,
-            'securityAnswer2': securityAnswer2,
-            'securityAnswer3': securityAnswer3
-        }
-
-        return self.app.post('/registration', data=registration_data,
-                             follow_redirects=True)
+        return self.app.get('/logout', follow_redirects=True) 
     
     def forgotPassword(self, email):
         """ Forgot password - enter email. """
@@ -79,7 +59,8 @@ class BaseLoginTestCase(BaseTestCase):
         reset_data = {'securityAnswer1': securityAnswer1,
                       'securityAnswer2': securityAnswer2,
         	      'securityAnswer3': securityAnswer3,
-        	      'password': password}
+        	      'password': password,
+                      'password_match': password}
 
         return self.app.post('/resetPassword', data=reset_data,
                              follow_redirects=True)
@@ -107,6 +88,23 @@ class BaseAuthenticatedTestCase(BaseLoginTestCase):
         db.session.commit()
 
         super(BaseAuthenticatedTestCase, self).setUp()
+
+
+class AuthenticatedViewTestCase(BaseAuthenticatedTestCase):
+    """
+    Tests related to misc actions when the user is logged in.
+    """
+    def test_login_page_already_authenticated(self):
+        """ Test viewing the login page while authenticated. """
+        response = self.app.get('/login', follow_redirects=True)
+        # The user is redirected elsewhere
+        assert 'Log In - dogpound' not in response.data
+
+    def test_register_page_already_authenticated(self):
+        """ Test viewing the registration page while authenticated. """
+        response = self.app.get('/registration', follow_redirects=True)
+        # The user is redirected elsewhere
+        assert 'Log In - dogpound' not in response.data
 
 
 class UnauthenticatedViewTestCase(BaseTestCase):
@@ -151,10 +149,52 @@ class LoginTestCase(BaseLoginTestCase):
         assert 'Home - dogpound' in response.data
 
 
-class RegistrationTestCase(BaseLoginTestCase):
+class BaseRegistrationTestCase(BaseLoginTestCase):
+    def register(self, firstName, lastName, email, password, password2, 
+    		 securityQuestion1, securityQuestion2, securityQuestion3, 
+    		 securityAnswer1, securityAnswer2, securityAnswer3):
+        """ Register user. """
+        registration_data = {
+            'firstName': firstName,
+            'lastName': lastName,
+            'email': email,
+            'password': password,
+            'password_match': password2,
+            'securityQuestion1': securityQuestion1,
+            'securityQuestion2': securityQuestion2,
+            'securityQuestion3': securityQuestion3,
+            'securityAnswer1': securityAnswer1,
+            'securityAnswer2': securityAnswer2,
+            'securityAnswer3': securityAnswer3
+        }
+
+        return self.app.post('/registration', data=registration_data,
+                             follow_redirects=True)
+
+    def tearDown(self):
+        # Delete the successfully registrated user.
+        created_user = User.query.filter(User.email=='test@email.com').first()
+        if created_user is not None:
+            db.session.delete(created_user)
+            db.session.commit()
+
+        super(BaseRegistrationTestCase, self).tearDown()
+
+
+class RegistrationTestCase(BaseRegistrationTestCase):
     """
     Tests related to Registration.
     """
+    def test_valid_registration(self):
+        """ Test a valid registration. """
+        response = self.register('TestFirst', 'TestLast', 'test@email.com',
+                                 'test', 'test',
+        	                 'What was your first pet\'s name?',
+                                 'spike', 'Favorite Food?', 'Pizza',
+                                 'School Name?', 'IUPUI')
+        assert 'Successful Registration!' in response.data
+        login_response = self.login('test@email.com', 'test')
+        assert 'Home - dogpound' in login_response.data
 
     def test_blank_firstName(self):
         """ Test a blank first name with all others valid. """
@@ -223,10 +263,37 @@ class RegistrationTestCase(BaseLoginTestCase):
         assert 'This field is required' in response.data
 
 
-class ResetPWTestCase(BaseLoginTestCase):
+class ResetPasswordTestCase(BaseLoginTestCase):
     """
     Tests related to resetting password.
     """
+    def test_valid_email(self):
+        """ Test a valid email address. """
+        response = self.forgotPassword('vader@deathstar.com')
+        assert 'Reset Password - dogpound' in response.data
+        
+    def test_valid_email_with_valid_answers(self):
+        """ Test invalid answers with a valid email address. """
+        response = self.resetPassword(email='han@falcon.com', 
+                                      securityAnswer1='Burgers', 
+                                      securityAnswer2='Spot',
+                                      securityAnswer3='1980',
+                                      password='newpassword',
+                                      password2='newpassword')
+        assert 'Password reset! Please log in.' \
+            in response.data
+
+    def test_valid_email_with_invalid_answers(self):
+        """ Test invalid answers with a valid email address. """
+        response = self.resetPassword(email='vader@deathstar.com', 
+                                      securityAnswer1='132', 
+                                      securityAnswer2='answer',
+                                      securityAnswer3='answer',
+                                      password='password',
+                                      password2='password')
+        assert 'Answers to security questions incorrect. Please try again.' \
+            in response.data
+
     def test_invalid_email(self):
         """ Test an invalid email address. """
         response = self.forgotPassword('invaliduser')

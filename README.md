@@ -64,6 +64,6 @@ Users are following other users from the same movie.
 Answers to security questions are the same for all users except junior
 Food - Burgers
 Pet - Spot
-Year Born - 1908
+Year Born - 1980
 
 Test Database is backed up as CSV files userDB, friendsDB, barksDB

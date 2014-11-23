@@ -6,7 +6,9 @@ from flask.ext.bcrypt import Bcrypt
 from app import app, db
 from app.models import User
 
+
 bcrypt = Bcrypt(app)
+
 
 class LoginForm(Form):
     """
@@ -47,26 +49,6 @@ class LoginChecker(object):
         return db.session.query(User).filter_by(email=self._email).first()
 
 
-class ForgotPWChecker(object):
-    """
-    Form that checks if a user is valid.
-    """
-    def __init__(self, email):
-        self._email = email
-
-    @property
-    def is_valid(self):
-        user = self.lookup_user
-        if user is not None:    
-            return True
-        return False
-
-    @property
-    def lookup_user(self):
-        """ Returns the user that is being validated. """
-        return db.session.query(User).filter_by(email=self._email).first()
-
-
 class ResetPWChecker(object):
     """
     Form that checks if email and security questions are valid.
@@ -83,9 +65,9 @@ class ResetPWChecker(object):
         user = self.lookup_user
         if user is not None:    
             # check typed password against hashed pw in DB
-            if (user.securityAnswer1 == self._securityAnswer1) and \
-                    (user.securityAnswer2 == self._securityAnswer2) and \
-                    (user.securityAnswer3 == self._securityAnswer3):
+            if (user.securityAnswer1==self._securityAnswer1) and \
+                    (user.securityAnswer2==self._securityAnswer2) and \
+                    (user.securityAnswer3==self._securityAnswer3):
 	        return True
         return False
 

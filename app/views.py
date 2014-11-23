@@ -93,7 +93,7 @@ def follow_user():
 def login():
     """Route for the login page."""
 
-    if g.user is not None and g.user.is_authenticated():
+    if is_logged_in():
         return redirect(url_for('index'))
 
     login_form = LoginForm(request.form)
@@ -112,18 +112,13 @@ def login():
 @app.route('/forgotPassword', methods=['GET', 'POST'])
 def forgotPassword():
     """Route for the forgot password page."""
-
-#     if g.user is not None and g.user.is_authenticated():
-#         return redirect(url_for('index'))
-
     login_form = EmailForm(request.form)
-    all_users = User.query.all()
     session['forgotPasswordEmail'] = request.form.get('email')
     
     if login_form.validate_on_submit():
-    	for user in all_users:
-    		if (request.form.get('email') == user.email):
-    			return redirect(url_for('resetPassword'))		
+        user = User.query.filter(User.email==request.form.get('email')).first()
+        if user is not None:
+            return redirect(url_for('resetPassword'))		
     	flash('Invalid User Email', 'danger')
     	
     return render_template('forgotPassword.html', title='Forgot Password',
@@ -152,7 +147,6 @@ def resetPassword():
         flash('Answers to security questions incorrect. Please try again.',
               'danger')
         return redirect(url_for('forgotPassword'))
-
 	
     return render_template('resetPassword.html', title='Reset Password',
                            form=questions_form, user=user)
@@ -163,7 +157,7 @@ def register():
     """Route for the registration page."""
     bcrypt = Bcrypt(app)
 
-    if g.user is not None and g.user.is_authenticated():
+    if is_logged_in():
         return redirect(url_for('index'))
 
     registration_form = RegistrationForm(request.form)
