@@ -150,6 +150,7 @@ class LoginTestCase(BaseLoginTestCase):
         response = self.login('vader@deathstar.com', 'noarms')
         assert 'Home - dogpound' in response.data
 
+
 class RegistrationTestCase(BaseLoginTestCase):
     """
     Tests related to Registration.
@@ -220,6 +221,7 @@ class RegistrationTestCase(BaseLoginTestCase):
         response = self.register('TestFirst', 'TestLast', 'test@email.com', 'test', 'test', 
         	'What was your first pet\'s name?', 'spike', 'Favorite Food?', 'Pizza', 'School Name?', '')
         assert 'This field is required' in response.data
+
 
 class ResetPWTestCase(BaseLoginTestCase):
     """
@@ -329,6 +331,28 @@ class ViewBarkTestCase(BaseBarkTestCase):
         assert user1_content in response.data
         assert user2_content in response.data
         assert user3_content not in response.data
+
+
+class FollowUserTestCase(BaseAuthenticatedTestCase):
+    """
+    Tests related to the following other users.
+    """
+    def follow_user(self, email):
+        """ Follow a user given an email address. """
+        return self.app.post('/follow', data={'email': email},
+                             follow_redirects=True)
+
+    def test_follow_user(self):
+        """ Test following a user. """
+        response = self.follow_user('luke@rebelbase.com') 
+        assert "You are now following luke@rebelbase.com" in response.data
+
+    def test_follow_user_already_followed(self):
+        """ Test following a user that is already being followed. """
+        self.follow_user('doc@delorean.com') 
+        # Attempt following again.
+        response = self.follow_user('doc@delorean.com') 
+        assert "You are already following this user." in response.data
 
 
 if __name__ == '__main__':

@@ -7,7 +7,9 @@ from flask.ext.login import current_user, login_required, login_user, \
 from flask.ext.bcrypt import Bcrypt
 
 from app import app, db, login_manager
-from app.forms import BarkForm, LoginChecker, LoginForm, EmailForm, RegistrationForm, ForgotPWChecker, ResetPWChecker, ResetPasswordForm, FollowForm
+from app.forms import BarkForm, LoginChecker, LoginForm, EmailForm, \
+    RegistrationForm, ResetPWChecker, ResetPasswordForm, \
+    FollowForm
 from app.models import Bark, Friendship, User
 
 
@@ -22,17 +24,15 @@ def index():
     # display the bark form and feed
     form = BarkForm()
     
-    #form for following other users by email address
+    # form for following other users by email address
     follow_form = FollowForm()
 
     if form.validate_on_submit():
     # record bark in database and attach to active user
         bark = Bark(barkBody=form.barkBody.data, timestamp=datetime.utcnow(),
                     author=g.user)
-        db.session.add(bark) 
+        db.session.add(bark)
         db.session.commit() # commit database add
-        form.barkBody.data = '' # Clear form field once bark is committed
-
 
     # display all the barks in the database - 
     # <<< filter to own posts and friends posts only >>>
@@ -52,7 +52,8 @@ def index():
     friends_barks = [bark for bark in all_barks if is_valid_bark(bark)]
 
     return render_template('index.html', title='Home', user=g.user,
-                           barks=friends_barks, form=form, followForm=follow_form, loggedIn=is_logged_in())
+                           barks=friends_barks, form=form,
+                           followForm=follow_form, loggedIn=is_logged_in())
 							
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -92,7 +93,8 @@ def forgotPassword():
     			return redirect(url_for('resetPassword'))		
     	flash('Invalid User Email', 'danger')
     	
-    return render_template('forgotPassword.html', title='Forgot Password', form=login_form)
+    return render_template('forgotPassword.html', title='Forgot Password',
+                           form=login_form)
 
     
 @app.route('/resetPassword', methods=['GET', 'POST'])
@@ -115,12 +117,13 @@ def resetPassword():
     		db.session.commit()
     		flash('Password reset! Please log in.', 'danger')
     		return redirect(url_for('login'))
-    	flash('Answers to security questions incorrect. Please try again.', 'danger')
+    	flash('Answers to security questions incorrect. Please try again.',
+              'danger')
     	return redirect(url_for('forgotPassword'))
     	
     	
-    return render_template('resetPassword.html', title='Reset Password', form=questions_form,
-    						user=user)
+    return render_template('resetPassword.html', title='Reset Password',
+                           form=questions_form, user=user)
 
 
 @app.route("/registration", methods=['GET', 'POST'])
@@ -136,28 +139,29 @@ def register():
     if registration_form.validate_on_submit():
     	pw_hash = bcrypt.generate_password_hash(registration_form.password.data) #generate hash for password
     	user = User(firstName=registration_form.firstName.data, 
-    		lastName=registration_form.lastName.data, 
-    		email=registration_form.email.data, 
-    		password=pw_hash,
-    		securityQuestion1=registration_form.securityQuestion1.data,
-    		securityAnswer1=registration_form.securityAnswer1.data,
-    		securityQuestion2=registration_form.securityQuestion2.data,
-    		securityAnswer2=registration_form.securityAnswer2.data,
-    		securityQuestion3=registration_form.securityQuestion3.data,
-    		securityAnswer3=registration_form.securityAnswer3.data)
+    		    lastName=registration_form.lastName.data, 
+    		    email=registration_form.email.data, 
+    		    password=pw_hash,
+    		    securityQuestion1=registration_form.securityQuestion1.data,
+    		    securityAnswer1=registration_form.securityAnswer1.data,
+    		    securityQuestion2=registration_form.securityQuestion2.data,
+    		    securityAnswer2=registration_form.securityAnswer2.data,
+    		    securityQuestion3=registration_form.securityQuestion3.data,
+    		    securityAnswer3=registration_form.securityAnswer3.data)
     	db.session.add(user)
     	db.session.commit() #commit database add
-    	login = LoginChecker(email=request.form.get('email'), password=pw_hash)
+    	login = LoginChecker(email=request.form.get('email'),
+                             password=pw_hash)
     	flash('Successful Registration! Please log in.', 'danger')
     	return redirect(url_for('login'))
     	
-	
 	# if login.is_valid:
 # 		login_user(login.lookup_user, remember=True)
 # 		return redirect(url_for('index'))
 # 	flash('Invalid Registration', 'danger')
 
-    return render_template('registration.html', title='Register', form=registration_form)
+    return render_template('registration.html', title='Register',
+                           form=registration_form)
 
 
 @app.route("/logout")
