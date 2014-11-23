@@ -7,6 +7,9 @@ db-create:
 run:
 	python run.py
 
+jenkins-test:
+	nosetests --with-coverage --with-xunit --cover-package=app --cover-erase
+
 test: coverage-run coverage-report
 
 coverage-run:
