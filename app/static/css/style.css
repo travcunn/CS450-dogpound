@@ -43,6 +43,7 @@ body {
 .main-content {
   padding-top: 70px;
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.176);
+  background-color: #FFFFFF;
 }
 
 /* Main marketing message and sign up button */
