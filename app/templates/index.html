@@ -21,8 +21,17 @@
         <!-- Loop through and display all barks in database -->
         {% for bark in barks %}
         <!-- display user's first & last name and email address with each bark posted -->
-        <div><p id='bark'><b>{{ bark.author.firstName }} {{ bark.author.lastName }} - {{ bark.author.email }}
-        :</b> <br>{{ bark.barkBody }}</p></div>
+        <div class="row">
+            <div class="col-xs-12">
+            <div class="col-xs-2">
+                <img class="img-circle" src="http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=identicon&s=48">
+            </div>
+            <div class="col-xs-10">
+                <p id='bark'><b>{{ bark.author.firstName }} {{ bark.author.lastName }} - {{ bark.author.email }}
+                :</b> <br>{{ bark.barkBody }}</p>
+            </div>
+            </div>
+        </div>
         {% endfor %}
 </div>
 <div class="col-lg-4">
