@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="row">
-<div class="col-lg-9">
+<div class="col-lg-8">
     <div class="panel panel-default">
         <div class="panel-body">                
             <form action="" method="post" name="bark">
@@ -25,18 +25,17 @@
         :</b> <br>{{ bark.barkBody }}</p></div>
         {% endfor %}
 </div>
-<div class="col-lg-3">
-    <!-- Form to allow users to follow other users -->
-    <form action="/follow" method="post" name="follow">
-        <!-- hidden field implements csrf protection on the page -->
-        {{ followForm.hidden_tag() }}
-        <p>
-        <!-- Title for following user form field-->
-        Follow new user by E-mail:<br>
-        {{ followForm.email }}
-        </p>
-        <p><input type="submit" value="Follow" id="followSubmit"></p>
-    </form>
+<div class="col-lg-4">
+
+<form role="form" action="/follow" method="post" name="follow">
+  {{ followForm.hidden_tag() }}
+  <div class="form-group">
+    <label for="exampleInputEmail1">Follow user by email address</label>
+    {{ followForm.email(class="form-control", placeholder="Enter email") }}
+  </div>
+  <button type="submit" class="btn btn-success">Submit</button>
+</form>
+
 </div>
 </div>
 {% endblock %}
