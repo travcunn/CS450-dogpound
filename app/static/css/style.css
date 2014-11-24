@@ -77,3 +77,11 @@ body {
     border-bottom: 0;
   }
 }
+
+.valid {
+  color:DarkGreen;
+}
+
+.invalid {
+  color:maroon;
+}

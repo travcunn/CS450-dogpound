@@ -3,31 +3,20 @@
 
 <!-- feed/home page block -->
 {% block content %}
-    <!-- Display user's first and last name in greeting line -->
-        <h2>Welcome, {{ user.firstName }} {{ user.lastName }}</h2>
-        <form action="" method="post" name="bark">
-            <!-- hidden field implements csrf protection on the page -->
-            {{ form.hidden_tag() }}
-            <p>
-            <!-- Title for barking form field-->
-                Post new bark:<br>
-                {{ form.barkBody(size=80) }}<p>Characters Remaining: <div id='barkCount' class='valid'>140</div></p>
-            </p>
-            <p><input type="submit" value="Bark" id="barkSubmit"></p>
-        </form>
-        
-		<!-- Form to allow users to follow other users -->
-        <form action="/follow" method="post" name="follow">
-            <!-- hidden field implements csrf protection on the page -->
-            {{ followForm.hidden_tag() }}
-            <p>
-            <!-- Title for following user form field-->
-                Follow new user by E-mail:<br>
-                {{ followForm.email(size=30) }}
-            </p>
-            <p><input type="submit" value="Follow" id="followSubmit"></p>
-        </form>
-    
+
+<div class="row">
+<div class="col-lg-9">
+    <div class="panel panel-default">
+        <div class="panel-body">                
+            <form action="" method="post" name="bark">
+                {{ form.hidden_tag() }}
+                {{ form.barkBody(class='form-control counted', placeholder="Type in your message", rows="2", style="margin-bottom:10px") }}
+                <h6 class="pull-right" id="counter"><div id='barkCount' class='valid'>140 characters remaining.</div></h6>
+                <button class="btn btn-info" type="submit">Post New Bark</button>
+            </form>
+        </div>
+    </div>
+            
         <h3>Dogfeed:</h3>
         <!-- Loop through and display all barks in database -->
         {% for bark in barks %}
@@ -35,4 +24,19 @@
         <div><p id='bark'><b>{{ bark.author.firstName }} {{ bark.author.lastName }} - {{ bark.author.email }}
         :</b> <br>{{ bark.barkBody }}</p></div>
         {% endfor %}
+</div>
+<div class="col-lg-3">
+    <!-- Form to allow users to follow other users -->
+    <form action="/follow" method="post" name="follow">
+        <!-- hidden field implements csrf protection on the page -->
+        {{ followForm.hidden_tag() }}
+        <p>
+        <!-- Title for following user form field-->
+        Follow new user by E-mail:<br>
+        {{ followForm.email }}
+        </p>
+        <p><input type="submit" value="Follow" id="followSubmit"></p>
+    </form>
+</div>
+</div>
 {% endblock %}

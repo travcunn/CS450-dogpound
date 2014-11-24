@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import BooleanField, StringField, PasswordField
+from wtforms import BooleanField, PasswordField, StringField, TextAreaField
 from wtforms.validators import DataRequired
 from flask.ext.bcrypt import Bcrypt
 
@@ -81,7 +81,7 @@ class BarkForm(Form):
     """
     New bark form.
     """
-    barkBody = StringField('bark', validators=[DataRequired()])
+    barkBody = TextAreaField('bark', validators=[DataRequired()])
 
 
 class FollowForm(Form):

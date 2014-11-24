@@ -5,8 +5,8 @@ $(document).ready(function(){
 	if (pageName = 'index') {
 		// event if text is entered into the bark field
 		$('#barkBody').keyup(function(){
-			$goodLength = $("<p class='valid'>" + (140 - $('#barkBody').val().length) + "</p>")
-			$overLength = $("<p class='invalid'>" + (140 - $('#barkBody').val().length) + "</p>")
+			$goodLength = $("<p class='valid'>" + (140 - $('#barkBody').val().length) + " characters remaining.</p>")
+			$overLength = $("<p class='invalid'>" + (140 - $('#barkBody').val().length) + " characters remaining.</p>")
 		
 			// Display characters remaining in green if over 0
 			if ($('#barkBody').val().length < 141){
