@@ -66,7 +66,7 @@ def follow_user():
     if follow_form.validate_on_submit():
         user_to_follow = User.query.filter(User.email==follow_form.email.data).first()
         if user_to_follow is None:
-            flash("User with that email does not exist.")
+            flash("User with that email does not exist.", "danger")
             return redirect(url_for('index'))
 
         friendship = Friendship.query.filter(
@@ -74,7 +74,7 @@ def follow_user():
                         Friendship.friend_id==user_to_follow).first()
 
         if friendship is not None:
-            flash("You are already following this user.")
+            flash("You are already following this user.", "info")
             return redirect(url_for('index'))
 
 
@@ -85,7 +85,7 @@ def follow_user():
         db.session.add(friendship)
         db.session.commit()
 
-        flash("You are now following %s" % user_to_follow.email)
+        flash("You are now following %s" % (user_to_follow.email,), "success")
     return redirect(url_for('index'))
 
 
@@ -142,7 +142,7 @@ def resetPassword():
             pw_hash = bcrypt.generate_password_hash(questions_form.password.data)
             user.password = pw_hash
             db.session.commit()
-            flash('Password reset! Please log in.', 'danger')
+            flash('Password reset! Please log in.', 'success')
             return redirect(url_for('login'))
         flash('Answers to security questions incorrect. Please try again.',
               'danger')
@@ -177,7 +177,7 @@ def register():
         db.session.add(user)
         db.session.commit() #commit database add
         LoginChecker(email=request.form.get('email'), password=pw_hash)
-    	flash('Successful Registration! Please log in.', 'danger')
+    	flash('Successful Registration! Please log in.', 'success')
     	return redirect(url_for('login'))
     	
 	# if login.is_valid:
@@ -193,7 +193,7 @@ def register():
 def logout():
     """Redirect page for invalid logins."""
     logout_user()
-#     flash('You have been logged out.')
+    flash('You have been logged out.', "info")
     return redirect(url_for('login'))
 
 
