@@ -3,41 +3,29 @@
 
 <!-- login page block -->
 {% block content %}
-  <h1>Sign In</h1>
-  
-<!--   Flask-WTF form for login -->
-  <form action="" method="post" name="login">
-	<!-- hidden field implements csrf protection on the page -->
-      {{ form.hidden_tag() }}
-      <p>
-		<!-- field to enter email address -->
-          E-mail:<br>
-          {{ form.email(size=35) }}<br>
-			<!-- show validation errors on form in red -->
-          {% for error in form.email.errors %}
-          	<span class='invalid'>[{{ error }}]</span>
-          {% endfor %}<br>
-          
-          <!-- field to enter password -->
-          Password:<br>
-          {{ form.password(size=35) }}<br>
-          <!-- show validation errors on form in red -->
-          {% for error in form.password.errors %}
-          	<span class='invalid'>[{{ error }}]</span>
-          {% endfor %}<br>
-          
-      </p>
-		<!-- checkbox for future feature to add "remember me" option -->
-<!--       <p>{{ form.remember_me }} Remember Me</p> -->
-      <p><input type="submit" value="Sign In"></p>
-  </form>
-  
-  <p>
-  	If you don't have an account, please <a href="/registration">Register Now</a>.
-  </p>
-  
-   <p>
-  	<a href="/forgotPassword">Forgot Your Password?</a>
-  </p>
-  
+<div class="col-md-6 col-md-offset-3">
+    <div class="panel panel-default">
+  <div class="panel-heading"><h3 class="panel-title"><strong>Login </strong></h3></div>
+  <div class="panel-body">
+  <form role="form" method="post" action="">
+  {{ form.hidden_tag() }}
+  <div class="form-group">
+    <label for="exampleInputEmail1">Username or Email</label>
+    {{ form.email(class="form-control", placeholder="Email") }}
+    {% for error in form.email.errors %}
+        <span class='invalid'>[{{ error }}]</span>
+    {% endfor %}
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Password <a href="/forgotPassword">(forgot password)</a></label>
+    {{ form.password(class="form-control", placeholder="Password") }}
+    {% for error in form.password.errors %}
+        <span class='invalid'>[{{ error }}]</span>
+    {% endfor %}
+  </div>
+  <button type="submit" class="btn btn-success">Login</button>
+  <a href="/registration" class="btn btn-primary" role="button">Register</a>
+</form>
+  </div>
+</div>
 {% endblock %}
