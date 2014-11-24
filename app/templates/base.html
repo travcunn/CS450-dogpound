@@ -9,6 +9,8 @@
     <link href="/static/css/bootstrap.css" rel="stylesheet">
     <link href="/static/css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/bootswatch.min.css">
+    <link rel="stylesheet" href="/static/css/sweet-alert.css">
+    <script src="/static/js/sweet-alert.min.js"></script>
 	  <script type='text/javascript' src='/static/js/jquery.js'></script>
 	  <script type='text/javascript' src='/static/js/bootstrap.min.js'></script>
 	  <script type='text/javascript' src='/static/js/pw_script.js'></script>
@@ -56,10 +58,23 @@
 {% if messages %}
 <div class="top-error">
 {% for category, message in messages %}
+{% if category == 'danger' %}
+<script>
+$(document).ready(function () {
+  swal({
+    title: "Error!",
+    text: "{{ message }}",
+    type: "error",
+    confirmButtonText: "Ok"
+  });
+});
+</script>
+{% else %}
 <div class="alert alert-dismissable alert{% if category != 'message'%}-{{ category }}{% endif %}{% if category == 'message' %}-warning{% endif %}">
 <button type="button" class="close" data-dismiss="alert">&times;</button>
 <strong class="top-error-text">{{ message }}</strong>
 </div>
+{% endif %}
 {% endfor %}
 </div>
 {% endif %}
