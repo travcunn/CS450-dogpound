@@ -24,11 +24,11 @@
         <ul class="media-list">
             <li class="media">
             <a class="media-left">
-                <img class="img-rounded" src="http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=identicon&s=48">
+                <img class="img-rounded" src="http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=identicon&s=60">
             </a>
             <div class="media-body">
                 <strong class="media-heading">{{ bark.author.firstName }} {{ bark.author.lastName }}</strong> <small>({{ bark.author.email }})</small>
-                <p>{{ bark.barkBody }}</p>
+                <p>{{ bark.barkBody | urlize(40, true) }}</p>
             </div>
             </li>
         </ul>
