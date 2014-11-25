@@ -5,6 +5,15 @@ A twitter-like service for animals other than birds.
 [![Build Status](http://crunkcastle.noip.me:8080/buildStatus/icon?job=dogpound)](http://crunkcastle.noip.me:8080/job/dogpound/)
 
 
+Screenshots
+===========
+####Login
+[![Login](https://github.iu.edu/CS450-ECE461/fall2014-group8/raw/master/misc/login.png)](https://github.iu.edu/CS450-ECE461/fall2014-group8/raw/master/misc/login.png)
+
+####DogFeed
+[![Home](https://github.iu.edu/CS450-ECE461/fall2014-group8/raw/master/misc/home.png)](https://github.iu.edu/CS450-ECE461/fall2014-group8/raw/master/misc/home.png)
+
+
 Requirements
 ============
 You will need the following to setup dogpound:
