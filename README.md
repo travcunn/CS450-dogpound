@@ -1,9 +1,8 @@
-dogpound
+[DogPound](http://54.175.0.166/login) - AWS EC2 Instance
 ========
 A twitter-like service for animals other than birds.
 
 [![Build Status](http://crunkcastle.noip.me:8080/buildStatus/icon?job=dogpound)](http://crunkcastle.noip.me:8080/job/dogpound/)
-
 
 Screenshots
 ===========
