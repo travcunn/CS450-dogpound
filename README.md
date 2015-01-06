@@ -5,10 +5,10 @@ A twitter-like service for animals other than birds.
 Screenshots
 ===========
 ####Login
-[![Login](https://github.iu.edu/CS450-ECE461/fall2014-group8/raw/master/misc/login.png)](https://github.iu.edu/CS450-ECE461/fall2014-group8/raw/master/misc/login.png)
+[![Login](https://raw.githubusercontent.com/travcunn/dogpound/master/misc/login.png)](https://raw.githubusercontent.com/travcunn/dogpound/master/misc/login.png)
 
 ####DogFeed
-[![Home](https://github.iu.edu/CS450-ECE461/fall2014-group8/raw/master/misc/home.png)](https://github.iu.edu/CS450-ECE461/fall2014-group8/raw/master/misc/home.png)
+[![Home](https://raw.githubusercontent.com/travcunn/dogpound/master/misc/home.png)](https://raw.githubusercontent.com/travcunn/dogpound/master/misc/home.png)
 
 
 Requirements
